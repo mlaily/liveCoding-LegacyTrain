@@ -1,2 +1,4 @@
 # kata-LegacyTrain
-Kata to show how to refactor a typical legacy code base
+Kata on how to refactor a typical legacy code base.
+
+Too many projects have layered-based...
