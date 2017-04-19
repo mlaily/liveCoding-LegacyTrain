@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using Newtonsoft.Json;
 
 namespace AcmeCorp.TrainDataService.Models
@@ -13,18 +14,33 @@ namespace AcmeCorp.TrainDataService.Models
         {
             this.trainId = trainId;
             _seats = new List<Seat>();
-            _seats.Add(new Seat("A", "43", ""));
-            _seats.Add(new Seat("A", "44", "45klksnFaZ"));
+            _seats.Add(new Seat("A", "1", ""));
+            _seats.Add(new Seat("A", "2", ""));
         }
 
         public IEnumerable<Seat> seats => _seats;
 
         public override string ToString()
         {
-            return JsonConvert.SerializeObject(this);
+            var awkwardJson = new StringBuilder("{\"seats\": {");
+            var firstElement = true;
+            foreach (var seat in this._seats)
+            {
+                if (!firstElement)
+                {
+                    awkwardJson.Append(", ");
+                }
+                else
+                {
+                    firstElement = false;
+                }
 
-            return
-                "{\"seats\": {\"1A\": {\"booking_reference\": \"\", \"seat_number\": \"1\", \"coach\": \"A\"}, \"2A\": {\"booking_reference\": \"\", \"seat_number\": \"2\", \"coach\": \"A\"}}}";
+                awkwardJson.Append($"{seat.ToString()}");
+            }
+
+            awkwardJson.Append("}}");
+
+            return awkwardJson.ToString();
         }
     }
 }

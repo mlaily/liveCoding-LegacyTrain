@@ -1,4 +1,6 @@
-﻿namespace AcmeCorp.TrainDataService.Models
+﻿using System.Text;
+
+namespace AcmeCorp.TrainDataService.Models
 {
     public class Seat
     {
@@ -11,6 +13,11 @@
             booking_reference = bookingReference;
             seat_number = seatNumber;
             this.coach = coach;
+        }
+
+        public override string ToString()
+        {
+            return $"\"{seat_number}{coach}\": {{\"booking_reference\": \"{booking_reference}\", \"seat_number\": \"{seat_number}\", \"coach\": \"{coach}\"}}";
         }
     }
 }
