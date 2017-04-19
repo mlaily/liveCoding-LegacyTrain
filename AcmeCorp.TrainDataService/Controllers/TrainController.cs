@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using AcmeCorp.TrainDataService.Models;
 
 namespace AcmeCorp.TrainDataService.Controllers
 {
@@ -7,6 +7,13 @@ namespace AcmeCorp.TrainDataService.Controllers
     //[Route("api/[controller]")]
     public class TrainController : Controller
     {
+        private readonly IProvideTrain trainProvider;
+
+        public TrainController(IProvideTrain trainProvider)
+        {
+            this.trainProvider = trainProvider;
+        }
+
         // GET api/values
         //[HttpGet]
         //public IEnumerable<string> Get()
@@ -14,12 +21,12 @@ namespace AcmeCorp.TrainDataService.Controllers
         //    return new string[] { "value1", "value2" };
         //}
 
-        // GET api/values/5
-        [HttpGet("{id}")]
+        // GET api/data_for_train/5FSdR
+        [HttpGet("{trainId}")]
         //[HttpGet]
-        public string Get(string id)
+        public string Get(string trainId)
         {
-            return $"train id: {id}";
+            return this.trainProvider.GetTrain(trainId).ToString();
         }
 
         // POST api/values

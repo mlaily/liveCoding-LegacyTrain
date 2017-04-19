@@ -17,6 +17,9 @@ namespace TrainTrain.ConsoleApp
             var jsonResult = manager.Reserve(train, seats);
 
             Console.Write(jsonResult.Result);
+
+            Console.WriteLine("Type <enter> to exit.");
+            Console.ReadLine();
         }
     }
 

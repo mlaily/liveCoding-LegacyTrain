@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AcmeCorp.TrainDataService.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -29,6 +30,9 @@ namespace AcmeCorp.TrainDataService
         {
             // Add framework services.
             services.AddMvc();
+
+            // Registers our services
+            services.AddScoped<IProvideTrain, TrainRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
