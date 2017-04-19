@@ -1,30 +1,49 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace TrainTrain.ConsoleApp
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var train = args[0];
             var seats = int.Parse(args[1]);
 
             var manager = new TicketManager();
 
-            string jsonResult = manager.Reserve(train, seats);
+            var jsonResult = manager.Reserve(train, seats);
+
+            Console.Write(jsonResult.Result);
         }
     }
 
     public class TicketManager
     {
-        public string Reserve(string train, int seats)
+        public async Task<string> Reserve(string train, int seats)
         {
-            //var train
-            throw new NotImplementedException();
+            var result = string.Empty;
+
+            string JsonTrainTopology;
+            
+            // get the train topology
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("http://localhost:50680");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                // HTTP GET
+                var response = await client.GetAsync($"api/data_for_train/{train}");
+                response.EnsureSuccessStatusCode();
+                JsonTrainTopology = await response.Content.ReadAsStringAsync();
+            }
+
+            result = JsonTrainTopology;
+
+            return result;
         }
     }
 }
