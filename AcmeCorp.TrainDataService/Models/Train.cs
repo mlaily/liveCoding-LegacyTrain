@@ -1,30 +1,40 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using Newtonsoft.Json;
 
 namespace AcmeCorp.TrainDataService.Models
 {
     public class Train
     {
         private string trainId;
-        private readonly List<Seat> _seats;
 
+        public List<Seat> Seats
+        {
+            get
+            {
+                var res = new List<Seat>();
+                foreach (var coach in this.Coaches)
+                {
+                    res.AddRange(coach.Seats);
+                }
+
+                return res;
+            }
+        }
 
         public Train(string trainId)
         {
             this.trainId = trainId;
-            _seats = new List<Seat>();
-            _seats.Add(new Seat("A", "1", ""));
-            _seats.Add(new Seat("A", "2", ""));
+            this.Coaches = new List<Coach>();
         }
 
-        public IEnumerable<Seat> seats => _seats;
+        public List<Coach> Coaches { get; set; }
 
         public override string ToString()
         {
             var awkwardJson = new StringBuilder("{\"seats\": {");
             var firstElement = true;
-            foreach (var seat in this._seats)
+            foreach (var seat in this.Seats)
             {
                 if (!firstElement)
                 {
@@ -41,6 +51,11 @@ namespace AcmeCorp.TrainDataService.Models
             awkwardJson.Append("}}");
 
             return awkwardJson.ToString();
+        }
+
+        public void Add(Coach coach)
+        {
+            this.Coaches.Add(coach);
         }
     }
 }

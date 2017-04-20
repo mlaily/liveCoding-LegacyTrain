@@ -14,7 +14,7 @@ namespace AcmeCorp.TrainDataService.Controllers
             this.trainProvider = trainProvider;
         }
 
-        // GET api/values
+        // GET api/data_for_train
         //[HttpGet]
         //public IEnumerable<string> Get()
         //{
@@ -29,19 +29,20 @@ namespace AcmeCorp.TrainDataService.Controllers
             return this.trainProvider.GetTrain(trainId).ToString();
         }
 
-        // POST api/values
+        // POST api/data_for_train
         [HttpPost]
         public void Post([FromBody]string value)
         {
+            this.trainProvider.UpdateTrainReservations(value);
         }
 
-        // PUT api/values/5
+        // PUT api/data_for_train/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
         }
 
-        // DELETE api/values/5
+        // DELETE api/data_for_train/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
