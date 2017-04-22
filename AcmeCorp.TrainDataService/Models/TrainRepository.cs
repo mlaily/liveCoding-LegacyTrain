@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace AcmeCorp.TrainDataService.Models
 {
@@ -31,9 +32,23 @@ namespace AcmeCorp.TrainDataService.Models
             return _trains[trainId];
         }
 
-        public void UpdateTrainReservations(string jsonFormatForTrainUpdate)
+        public void UpdateTrainReservations(TrainUpdateDTO trainUpdateDto)
         {
-            throw new System.NotImplementedException();
+            if (string.IsNullOrEmpty(trainUpdateDto.train_id))
+            {
+                throw new InvalidOperationException("Must have a non-null or non-empty train_id");
+            }
+
+            var train = GetTrain(trainUpdateDto.train_id);
+
+            var seats = new List<Seat>();
+            foreach (var seatInString in trainUpdateDto.seats)
+            {
+                var s = new Seat(seatInString[1].ToString(), seatInString[0].ToString(), trainUpdateDto.booking_reference);
+                seats.Add(s);
+            }
+
+            train.Reserve(seats, trainUpdateDto.booking_reference);
         }
     }
 
@@ -47,5 +62,11 @@ namespace AcmeCorp.TrainDataService.Models
 
         public List<Seat> Seats { get; set; }
         public string Name { get; set; }
+
+        public void UpsertSeat(Seat seat)
+        {
+            this.Seats.Remove(seat);
+            this.Seats.Add(seat);
+        }
     }
 }

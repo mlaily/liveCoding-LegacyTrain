@@ -13,7 +13,7 @@ namespace AcmeCorp.TrainDataService.Models
             get
             {
                 var res = new List<Seat>();
-                foreach (var coach in this.Coaches)
+                foreach (var coach in this.Coaches.Values)
                 {
                     res.AddRange(coach.Seats);
                 }
@@ -25,10 +25,10 @@ namespace AcmeCorp.TrainDataService.Models
         public Train(string trainId)
         {
             this.trainId = trainId;
-            this.Coaches = new List<Coach>();
+            this.Coaches = new Dictionary<string, Coach>();
         }
 
-        public List<Coach> Coaches { get; set; }
+        public Dictionary<string, Coach> Coaches { get; set; }
 
         public override string ToString()
         {
@@ -55,7 +55,16 @@ namespace AcmeCorp.TrainDataService.Models
 
         public void Add(Coach coach)
         {
-            this.Coaches.Add(coach);
+            this.Coaches.Add(coach.Name, coach);
+        }
+
+        public void Reserve(List<Seat> seats, string bookingReference)
+        {
+            foreach (var seat in seats)
+            {
+                var coach = this.Coaches[seat.coach];
+                coach.UpsertSeat(seat);
+            }
         }
     }
 }

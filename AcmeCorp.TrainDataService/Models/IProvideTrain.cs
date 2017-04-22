@@ -3,6 +3,6 @@
     public interface IProvideTrain
     {
         Train GetTrain(string trainId);
-        void UpdateTrainReservations(string jsonFormatForTrainUpdate);
+        void UpdateTrainReservations(TrainUpdateDTO trainUpdateDto);
     }
 }

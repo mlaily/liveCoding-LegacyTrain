@@ -2,7 +2,7 @@
 
 namespace AcmeCorp.TrainDataService.Models
 {
-    public class Seat
+    public class  Seat
     {
         public string booking_reference { get; set; }
         public string seat_number { get; set; }
@@ -13,6 +13,28 @@ namespace AcmeCorp.TrainDataService.Models
             booking_reference = bookingReference;
             seat_number = seatNumber;
             this.coach = coach;
+        }
+
+        protected bool Equals(Seat other)
+        {
+            return string.Equals(seat_number, other.seat_number) && string.Equals(coach, other.coach);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+
+            return Equals((Seat) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((seat_number != null ? seat_number.GetHashCode() : 0) * 397) ^ (coach != null ? coach.GetHashCode() : 0);
+            }
         }
 
         public override string ToString()
