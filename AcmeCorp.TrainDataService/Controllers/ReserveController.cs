@@ -6,7 +6,7 @@ namespace AcmeCorp.TrainDataService.Controllers
     [Route("api/reserve")]
     public class ReserveController : Controller
     {
-        // PUT on 
+        // POST on 
         // http://localhost:50680/api/reserve
         // with JSON payload:
         //  {
@@ -28,17 +28,5 @@ namespace AcmeCorp.TrainDataService.Controllers
         {
             trainProvider.UpdateTrainReservations(value);
         }
-
-        //// PUT api/data_for_train/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody]string value)
-        //{
-        //}
-
-        //// DELETE api/data_for_train/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
     }
 }
