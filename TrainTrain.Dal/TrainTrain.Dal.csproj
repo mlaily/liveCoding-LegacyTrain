@@ -43,11 +43,5 @@
     <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TrainTrain\TrainTrain.csproj">
-      <Project>{b7fbbf93-b9f3-4bd8-8b8a-7f7bf52b588a}</Project>
-      <Name>TrainTrain</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
