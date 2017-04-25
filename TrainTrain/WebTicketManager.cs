@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using TrainTrain.Dal;
 
 namespace TrainTrain
 {
@@ -24,7 +25,7 @@ namespace TrainTrain
             result = JsonTrainTopology;
 
             var trainInst = new Train(JsonTrainTopology);
-
+            
             if ((trainInst.MaxSeat - trainInst.ReservedSeats) > Math.Floor(ThreasholdManager.GetMaxRes() * trainInst.MaxSeat))
             {
                 var numberOfReserv = 0;
@@ -78,6 +79,8 @@ namespace TrainTrain
                         response.EnsureSuccessStatusCode();
 
                         var todod = "[TODOD]";
+
+                        await Task.Run(()=> Save(trainInst, train, bookingRef));
 
                         return $"{{\"train_id\": \"{train}\", \"booking_reference\": \"{bookingRef}\", \"seats\": {DumpSeats(availableSeats)}}}";
                     }
@@ -167,6 +170,15 @@ namespace TrainTrain
             return bookingRef;
         }
 
-        
+        private static void Save(Train trainInst, string trainId, string bookingRef)
+        {
+            var trainEntity = new TrainEntity { TrainId = trainId };
+            foreach (var seat in trainInst.Seats)
+            {
+                trainEntity.Seats.Add(new SeatEntity { BookingRef = bookingRef, CoachName = seat.CoachName, SeatNumber = seat.SeatNumber });
+            }
+            Factory.Create().Save(trainEntity);
+        }
+
     }
 }
