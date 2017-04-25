@@ -5,31 +5,38 @@ namespace AcmeCorp.TrainDataService.Models
 {
     public class TrainRepository : IProvideTrain
     {
+        readonly object syncRoot = new object();
         readonly Dictionary<string, Train> _trains = new Dictionary<string, Train>();
 
         public Train GetTrain(string trainId)
         {
-            if (!_trains.ContainsKey(trainId))
+            lock (this.syncRoot)
             {
-                // First time, we create the train with default value
-                var train = new Train(trainId);
-                foreach (var c in "ABCDEFGHIJKL")
+                if (!_trains.ContainsKey(trainId))
                 {
-                    var coach = new Coach(c.ToString());
-
-                    for (var i = 1; i < 42; i++)
+                    // First time, we create the train with default value
+                    var train = new Train(trainId);
+                    foreach (var c in "ABCDEFGHIJKL")
                     {
-                        var seat = new Seat(coach.Name, i.ToString(), string.Empty);
-                        coach.Seats.Add(seat);
+                        var coach = new Coach(c.ToString());
+
+                        for (var i = 1; i < 42; i++)
+                        {
+                            var seat = new Seat(coach.Name, i.ToString(), string.Empty);
+                            coach.Seats.Add(seat);
+                        }
+
+                        train.Add(coach);
                     }
 
-                    train.Add(coach);
+                    _trains.Add(trainId, train);
                 }
-
-                _trains.Add(trainId, train);
             }
 
-            return _trains[trainId];
+            lock (this.syncRoot)
+            {
+                return _trains[trainId];
+            }
         }
 
         public void UpdateTrainReservations(TrainUpdateDTO trainUpdateDto)

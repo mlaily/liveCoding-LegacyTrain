@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AcmeCorp.TrainDataService.Controllers
 {
-    [Route("api/reserve")]
+    [Route("reserve")]
     public class ReserveController : Controller
     {
         // POST on 

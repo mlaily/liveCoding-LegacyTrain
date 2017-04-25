@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -9,9 +10,13 @@ namespace TrainTrain.ConsoleApp
 {
     public class WebTicketManager
     {
+        private const string uriBookingReferenceService = "http://localhost:9999";
+        private const string urITrainDataService = "http://localhost:50680";
+
         public async Task<string> Reserve(string train, int seats)
         {
             var result = string.Empty;
+            string bookingRef;
 
             // get the train topology
             var JsonTrainTopology = await GetTrain(train);
@@ -20,7 +25,7 @@ namespace TrainTrain.ConsoleApp
 
             var trainInst = new Train(JsonTrainTopology);
 
-            if ((trainInst.MaxSeat - trainInst.ReservedSeats) < Math.Floor(ThreasholdManager.GetMaxRes() * trainInst.MaxSeat))
+            if ((trainInst.MaxSeat - trainInst.ReservedSeats) > Math.Floor(ThreasholdManager.GetMaxRes() * trainInst.MaxSeat))
             {
                 var numberOfReserv = 0;
                 // find seats to reserve
@@ -36,7 +41,6 @@ namespace TrainTrain.ConsoleApp
                 }
                 else
                 {
-                    string bookingRef;
 
                     using (var client = new HttpClient())
                     {
@@ -55,17 +59,19 @@ namespace TrainTrain.ConsoleApp
                 {
                     using (var client = new HttpClient())
                     {
-                        client.BaseAddress = new Uri("http://localhost:6666");
+                        client.BaseAddress = new Uri(urITrainDataService);
                         client.DefaultRequestHeaders.Accept.Clear();
                         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                         // HTTP POST
                         //var obj= new object();
                         //JsonConvert.SerializeObject(obj);
-                        HttpContent resJSON = new StringContent($"{{TODO}}", Encoding.UTF8, "application/json");
+                        HttpContent resJSON = new StringContent(BuildPostContent(train, bookingRef, availableSeats), Encoding.UTF8, "application/json");
 
-                        var response = await client.PostAsync($"/reserve", resJSON);
+                        var response = await client.PostAsync($"reserve", resJSON);
                         response.EnsureSuccessStatusCode();
+
+
                         var JsonNewTrainTopology = await response.Content.ReadAsStringAsync();
 
                         //Check(JsonTrainTopology);
@@ -78,12 +84,37 @@ namespace TrainTrain.ConsoleApp
             return $"{{\"train_id\": \"{train}\", \"booking_reference\": \"\", \"seats\": []}}";
         }
 
+        private static string BuildPostContent(string trainId, string bookingRef, IEnumerable<Seat> availableSeats)
+        {
+            var seats = new StringBuilder("[");
+            bool firstTime = true;
+
+            foreach (var availableSeat in availableSeats)
+            {
+                if (!firstTime)
+                {
+                    seats.Append(", ");
+                }
+                else
+                {
+                    firstTime = false;
+                }
+
+                seats.Append($"\"{availableSeat.SeatNumber}{availableSeat.CoachName}\"");
+            }
+            seats.Append("]");
+
+            var result = $"{{\r\n\t\"train_id\": \"{trainId}\",\r\n\t\"seats\": {seats.ToString()},\r\n\t\"booking_reference\": \"{bookingRef}\"\r\n}}";
+
+            return result;
+        }
+
         protected async Task<string> GetTrain(string train)
         {
             string JsonTrainTopology;
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://localhost:50680");
+                client.BaseAddress = new Uri(urITrainDataService);
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -97,7 +128,9 @@ namespace TrainTrain.ConsoleApp
 
         protected async Task<string> GetBookRef(HttpClient client)
         {
-            client.BaseAddress = new Uri("http://localhost:9999");
+            return GetBookingReference();
+
+            client.BaseAddress = new Uri(uriBookingReferenceService);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -107,6 +140,20 @@ namespace TrainTrain.ConsoleApp
 
             var bookingRef = await response.Content.ReadAsStringAsync();
             return bookingRef;
+        }
+
+        private static readonly Random random = new Random();
+
+        private static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        private string GetBookingReference()
+        {
+            return RandomString(6);
         }
     }
 }

@@ -11,7 +11,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/data_for_train/5FSdR",
+      "launchUrl": "api/data_for_train/341RTFA",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
