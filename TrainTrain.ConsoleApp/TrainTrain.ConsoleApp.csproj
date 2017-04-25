@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{11B75CE2-05F8-4C3B-81E2-BF378725B2B3}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TrainTrain.Dal</RootNamespace>
-    <AssemblyName>TrainTrain.Dal</AssemblyName>
+    <ProjectGuid>{2C7BF20F-3EDA-40D8-9FA1-DAD5AE46A996}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>TrainTrain.ConsoleApp</RootNamespace>
+    <AssemblyName>TrainTrain.ConsoleApp</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -40,10 +42,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebTicketManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TrainTrain.Dal\TrainTrain.Dal.csproj">
+      <Project>{11b75ce2-05f8-4c3b-81e2-bf378725b2b3}</Project>
+      <Name>TrainTrain.Dal</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TrainTrain\TrainTrain.csproj">
       <Project>{b7fbbf93-b9f3-4bd8-8b8a-7f7bf52b588a}</Project>
       <Name>TrainTrain</Name>

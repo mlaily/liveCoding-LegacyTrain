@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace TrainTrain.Core
+namespace TrainTrain
 {
     public class Train
     {

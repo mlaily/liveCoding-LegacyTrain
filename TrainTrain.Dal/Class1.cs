@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TrainTrain.Dal
+﻿namespace TrainTrain.Dal
 {
     public class Class1
     {
