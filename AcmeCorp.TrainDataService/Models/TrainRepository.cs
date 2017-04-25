@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AcmeCorp.TrainDataService.Models
 {
@@ -51,8 +52,10 @@ namespace AcmeCorp.TrainDataService.Models
             var seats = new List<Seat>();
             foreach (var seatInString in trainUpdateDto.seats)
             {
-                var coach = seatInString[1].ToString();
-                var seatNumber = seatInString[0].ToString();
+                // BUGFIX: 25/04/17
+                var seatNumber = string.Concat(seatInString.Where(c => char.IsDigit(c)));
+                var coach = string.Concat(seatInString.Where(c => char.IsLetter(c)));
+                // END OF BUGFIX: 25/04/17
 
                 var s = new Seat(coach, seatNumber, trainUpdateDto.booking_reference);
                 seats.Add(s);
