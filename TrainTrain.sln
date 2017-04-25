@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.3
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainTrain", "TrainTrain\TrainTrain.csproj", "{B7FBBF93-B9F3-4BD8-8B8A-7F7BF52B588A}"
 EndProject
@@ -22,6 +22,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DoNotTouch-ExternalDependencies", "DoNotTouch-ExternalDependencies", "{387971BC-9D63-49D7-9C8F-6E6CFBF08963}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainTrain.Api", "TrainTrain.Api\TrainTrain.Api.csproj", "{68C05460-30E0-4FB4-A8BF-3CFA9412181B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainTrain.Dal.Test", "..\TrainTrain.Dal.Test\TrainTrain.Dal.Test.csproj", "{FB05DD56-585A-49BE-9E1F-D4771406E92B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +55,10 @@ Global
 		{68C05460-30E0-4FB4-A8BF-3CFA9412181B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68C05460-30E0-4FB4-A8BF-3CFA9412181B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68C05460-30E0-4FB4-A8BF-3CFA9412181B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB05DD56-585A-49BE-9E1F-D4771406E92B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB05DD56-585A-49BE-9E1F-D4771406E92B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB05DD56-585A-49BE-9E1F-D4771406E92B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB05DD56-585A-49BE-9E1F-D4771406E92B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
