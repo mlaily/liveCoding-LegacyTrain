@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TrainTrain.Cli": {
+      "commandName": "Project",
+      "commandLineArgs": "\"341RTFA\" 3"
+    }
+  }
+}

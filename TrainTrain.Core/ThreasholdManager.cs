@@ -1,6 +1,4 @@
-using System;
-
-namespace TrainTrain
+namespace TrainTrain.Core
 {
     public static class ThreasholdManager
     {

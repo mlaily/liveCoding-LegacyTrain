@@ -1,4 +1,4 @@
-﻿namespace TrainTrain
+﻿namespace TrainTrain.Core
 {
     public class Seat
     {

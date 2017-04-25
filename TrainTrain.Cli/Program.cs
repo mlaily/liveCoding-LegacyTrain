@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TrainTrain.ConsoleApp
+namespace TrainTrain.Cli
 {
     internal class Program
     {

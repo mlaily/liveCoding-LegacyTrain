@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TrainTrain.Dal
+namespace TrainTrain.Core
 {
     public class Class1
     {

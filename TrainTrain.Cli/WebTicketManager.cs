@@ -5,13 +5,14 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using TrainTrain.Core;
 
-namespace TrainTrain.ConsoleApp
+namespace TrainTrain.Cli
 {
     public class WebTicketManager
     {
-        private const string uriBookingReferenceService = "http://localhost:51691/";
-        private const string urITrainDataService = "http://localhost:50680";
+        private const string UriBookingReferenceService = "http://localhost:51691/";
+        private const string UrITrainDataService = "http://localhost:50680";
 
         public async Task<string> Reserve(string train, int seats)
         {
@@ -62,7 +63,7 @@ namespace TrainTrain.ConsoleApp
                 {
                     using (var client = new HttpClient())
                     {
-                        client.BaseAddress = new Uri(urITrainDataService);
+                        client.BaseAddress = new Uri(UrITrainDataService);
                         client.DefaultRequestHeaders.Accept.Clear();
                         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -141,7 +142,7 @@ namespace TrainTrain.ConsoleApp
             string JsonTrainTopology;
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(urITrainDataService);
+                client.BaseAddress = new Uri(UrITrainDataService);
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -155,7 +156,7 @@ namespace TrainTrain.ConsoleApp
 
         protected async Task<string> GetBookRef(HttpClient client)
         {
-            client.BaseAddress = new Uri(uriBookingReferenceService);
+            client.BaseAddress = new Uri(UriBookingReferenceService);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
