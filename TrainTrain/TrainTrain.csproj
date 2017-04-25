@@ -47,6 +47,7 @@
     <Compile Include="Seat.cs" />
     <Compile Include="ThreasholdManager.cs" />
     <Compile Include="Train.cs" />
+    <Compile Include="WebTicketManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -6,7 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TrainTrain.ConsoleApp
+namespace TrainTrain
 {
     public class WebTicketManager
     {

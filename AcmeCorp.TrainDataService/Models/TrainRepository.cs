@@ -51,7 +51,10 @@ namespace AcmeCorp.TrainDataService.Models
             var seats = new List<Seat>();
             foreach (var seatInString in trainUpdateDto.seats)
             {
-                var s = new Seat(seatInString[1].ToString(), seatInString[0].ToString(), trainUpdateDto.booking_reference);
+                var coach = seatInString[1].ToString();
+                var seatNumber = seatInString[0].ToString();
+
+                var s = new Seat(coach, seatNumber, trainUpdateDto.booking_reference);
                 seats.Add(s);
             }
 

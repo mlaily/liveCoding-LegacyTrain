@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using TrainTrain.Api.Models;
 
 namespace TrainTrain.Api.Controllers
 {
     [Route("api/[controller]")]
-    public class ValuesController : Controller
+    public class ReservationsController : Controller
     {
         // GET api/values
         [HttpGet]
@@ -23,10 +24,12 @@ namespace TrainTrain.Api.Controllers
             return "value";
         }
 
-        // POST api/values
+        // POST api/reservations
         [HttpPost]
-        public void Post([FromBody]string value)
+        public async Task<string> Post([FromBody]ReservationRequestDto reservationRequest)
         {
+            var manager = new WebTicketManager();
+            return await manager.Reserve(reservationRequest.train_id, reservationRequest.number_of_seats);
         }
 
         // PUT api/values/5

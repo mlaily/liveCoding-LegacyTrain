@@ -38,6 +38,15 @@ namespace TrainTrain.Api
             loggerFactory.AddDebug();
 
             app.UseMvc();
+
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/error");
+            }
         }
     }
 }
