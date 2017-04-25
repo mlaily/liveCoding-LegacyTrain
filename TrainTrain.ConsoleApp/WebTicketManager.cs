@@ -10,7 +10,7 @@ namespace TrainTrain.ConsoleApp
 {
     public class WebTicketManager
     {
-        private const string uriBookingReferenceService = "http://localhost:9999";
+        private const string uriBookingReferenceService = "http://localhost:51691/";
         private const string urITrainDataService = "http://localhost:50680";
 
         public async Task<string> Reserve(string train, int seats)
@@ -35,6 +35,9 @@ namespace TrainTrain.ConsoleApp
                 foreach (var seat in availableSeats)
                     count++;
 
+                var reservedSets = 0;
+
+
                 if (count != seats)
                 {
                     return $"{{\"train_id\": \"{train}\", \"booking_reference\": \"\", \"seats\": []}}";
@@ -47,11 +50,11 @@ namespace TrainTrain.ConsoleApp
                         bookingRef = await GetBookRef(client);
                     }
 
-                    var reservedSets = 0;
                     foreach (var availableSeat in availableSeats)
                     {
                         availableSeat.BookingRef = bookingRef;
                         numberOfReserv++;
+                        reservedSets++;
                     }
                 }
 
@@ -63,25 +66,49 @@ namespace TrainTrain.ConsoleApp
                         client.DefaultRequestHeaders.Accept.Clear();
                         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                        // HTTP POST
-                        //var obj= new object();
-                        //JsonConvert.SerializeObject(obj);
-                        HttpContent resJSON = new StringContent(BuildPostContent(train, bookingRef, availableSeats), Encoding.UTF8, "application/json");
+                        if (reservedSets == 0)
+                        {
+                            Console.WriteLine("Reserved seat(s): ", reservedSets);
+                        }
 
+                        // HTTP POST
+                        HttpContent resJSON = new StringContent(BuildPostContent(train, bookingRef, availableSeats), Encoding.UTF8, "application/json");
                         var response = await client.PostAsync($"reserve", resJSON);
+
                         response.EnsureSuccessStatusCode();
 
+                        var todod = "[TODOD]";
 
-                        var JsonNewTrainTopology = await response.Content.ReadAsStringAsync();
-
-                        //Check(JsonTrainTopology);
-
-                        return $"{{\"train_id\": \"{train}\", \"booking_reference\": \"\", \"seats\": [TODOD]}}";
+                        return $"{{\"train_id\": \"{train}\", \"booking_reference\": \"{bookingRef}\", \"seats\": {DumpSeats(availableSeats)}}}";
                     }
                 }
             }
 
             return $"{{\"train_id\": \"{train}\", \"booking_reference\": \"\", \"seats\": []}}";
+        }
+
+        private string DumpSeats(IEnumerable<Seat> seats)
+        {
+            var sb = new StringBuilder("[");
+
+            var firstTime = true;
+            foreach (var seat in seats)
+            {
+                if (!firstTime)
+                {
+                    sb.Append(", ");
+                }
+                else
+                {
+                    firstTime = false;
+                }
+
+                sb.Append($"\"{seat.SeatNumber}{seat.CoachName}\"");
+            }
+
+            sb.Append("]");
+
+            return sb.ToString();
         }
 
         private static string BuildPostContent(string trainId, string bookingRef, IEnumerable<Seat> availableSeats)
@@ -128,8 +155,6 @@ namespace TrainTrain.ConsoleApp
 
         protected async Task<string> GetBookRef(HttpClient client)
         {
-            return GetBookingReference();
-
             client.BaseAddress = new Uri(uriBookingReferenceService);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -142,18 +167,6 @@ namespace TrainTrain.ConsoleApp
             return bookingRef;
         }
 
-        private static readonly Random random = new Random();
-
-        private static string RandomString(int length)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Repeat(chars, length)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
-
-        private string GetBookingReference()
-        {
-            return RandomString(6);
-        }
+        
     }
 }

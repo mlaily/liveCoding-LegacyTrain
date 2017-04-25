@@ -4,7 +4,6 @@ using AcmeCorp.TrainDataService.Models;
 namespace AcmeCorp.TrainDataService.Controllers
 {
     [Route("api/data_for_train")]
-    //[Route("api/[controller]")]
     public class TrainController : Controller
     {
         private readonly IProvideTrain trainProvider;
