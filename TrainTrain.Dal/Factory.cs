@@ -1,4 +1,6 @@
-﻿namespace TrainTrain.Dal
+﻿using TrainTrain.Dal.Entities;
+
+namespace TrainTrain.Dal
 {
     public class Factory
     {

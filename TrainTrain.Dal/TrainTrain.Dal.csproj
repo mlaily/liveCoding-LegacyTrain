@@ -48,10 +48,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Factory.cs" />
-    <Compile Include="TrainContext.cs" />
+    <Compile Include="Entities\TrainTrainContext.cs" />
     <Compile Include="IRepositoryEntity.cs" />
-    <Compile Include="SeatEntity.cs" />
-    <Compile Include="TrainEntity.cs" />
+    <Compile Include="Entities\SeatEntity.cs" />
+    <Compile Include="Entities\TrainEntity.cs" />
     <Compile Include="TrainRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

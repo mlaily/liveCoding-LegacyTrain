@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using TrainTrain.Dal.Entities;
 
 namespace TrainTrain.Dal
 {
@@ -9,17 +10,17 @@ namespace TrainTrain.Dal
     {
         public TrainEntity Get(string id)
         {
-            using (var db = new TrainContext())
+            using (var db = new TrainTrainContext())
             {
-                return db.Trains.SingleOrDefault(t => t.TrainId == id);
+                return db.Trains.Include(train => train.Seats).SingleOrDefault(t => t.TrainId == id);
             }
         }
 
         public List<TrainEntity> GetAll()
         {
-            using (var db = new TrainContext())
+            using (var db = new TrainTrainContext())
             {
-                return db.Trains.ToList();
+                return db.Trains.Include(train => train.Seats).ToList();
             }
         }
 
@@ -27,54 +28,65 @@ namespace TrainTrain.Dal
         {
             if (entity == null) return;
 
-            using (var db = new TrainContext())
+            using (var db = new TrainTrainContext())
             {
                 db.Trains.AddOrUpdate(entity);
                 db.SaveChanges();
             }
         }
 
-        public void Remove(TrainEntity entity)
+        public void SaveAll(TrainEntity[] entities)
         {
-            using (var db = new TrainContext())
+            if (entities == null) return;
+
+            using (var db = new TrainTrainContext())
             {
-                var toBeDeleted = GetTrain(db, entity);
-                if (toBeDeleted != null)
-                {
-                    RemoveTrain(db, toBeDeleted);
-                    db.SaveChanges();
-                }
+                db.Trains.AddOrUpdate(entities);
+                db.SaveChanges();
             }
         }
 
-        private static TrainEntity GetTrain(TrainContext db, TrainEntity target)
+        public void Remove(string trainId)
         {
-            if (target == null) return null;
-            return (from train in db.Trains where train.TrainId == target.TrainId select train).FirstOrDefault();
-        }
-
-        public void RemoveAll()
-        {
-            using (var db = new TrainContext())
+            using (var db = new TrainTrainContext())
             {
-                var trainEntities = db.Trains.ToList();
-                foreach (var train in trainEntities)
+                var train = db.Trains.Include(t => t.Seats).SingleOrDefault(t => t.TrainId == trainId);
+                if (train != null)
                 {
-                    RemoveTrain(db, train);
+                    train.Seats.RemoveAll(t => true);
+                    RemoveSeats(db);
+                    db.Trains.Remove(train);
                 }
                 db.SaveChanges();
             }
         }
 
-        private static void RemoveTrain(TrainContext db, TrainEntity target)
+        private static void RemoveSeats(TrainTrainContext db)
         {
-            if (target == null) return;
-
-            foreach (var seat in target.Seats.ToList())
+            var seats = from s in db.Seats
+                select s;
+            foreach (var s in seats)
             {
-                db.Seats.Remove(seat);
+                db.Seats.Remove(s);
             }
-            db.Trains.Remove(target);
+        }
+
+        public void RemoveAll()
+        {
+            using (var db = new TrainTrainContext())
+            {
+                var trains = db.Trains.Include(t => t.Seats).ToList();
+                if (trains.Any())
+                {
+                    foreach (var trainEntity in trains)
+                    {
+                        trainEntity.Seats.RemoveAll(t => true);
+                        RemoveSeats(db);
+                        db.Trains.Remove(trainEntity);
+                    }
+                }
+                db.SaveChanges();
+            }
         }
     }
 }

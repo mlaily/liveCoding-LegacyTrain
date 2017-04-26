@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using TrainTrain.Dal;
+using TrainTrain.Dal.Entities;
 
 namespace TrainTrain
 {
@@ -175,7 +176,7 @@ namespace TrainTrain
             var trainEntity = new TrainEntity { TrainId = trainId };
             foreach (var seat in trainInst.Seats)
             {
-                trainEntity.Seats.Add(new SeatEntity { BookingRef = bookingRef, CoachName = seat.CoachName, SeatNumber = seat.SeatNumber });
+                trainEntity.Seats.Add(new SeatEntity { TrainId = trainId, BookingRef = bookingRef, CoachName = seat.CoachName, SeatNumber = seat.SeatNumber });
             }
             Factory.Create().Save(trainEntity);
         }

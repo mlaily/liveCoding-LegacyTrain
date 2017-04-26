@@ -7,7 +7,8 @@ namespace TrainTrain.Dal
         T Get(string id);
         List<T> GetAll();
         void Save(T entity);
-        void Remove(T entity);
+        void SaveAll(T[] entities);
+        void Remove(string id);
         void RemoveAll();
     }
 }
