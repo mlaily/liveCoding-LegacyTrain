@@ -81,7 +81,7 @@ namespace TrainTrain
 
                         var todod = "[TODOD]";
 
-                        await Task.Run(()=> Save(trainInst, train, bookingRef));
+                        await SaveCache(train, trainInst, bookingRef);
 
                         return $"{{\"train_id\": \"{train}\", \"booking_reference\": \"{bookingRef}\", \"seats\": {DumpSeats(availableSeats)}}}";
                     }
@@ -171,7 +171,12 @@ namespace TrainTrain
             return bookingRef;
         }
 
-        private static void Save(Train trainInst, string trainId, string bookingRef)
+        private static async Task SaveCache(string train, Train trainInst, string bookingRef)
+        {
+            await Task.Run(() => Cache(trainInst, train, bookingRef));
+        }
+
+        private static void Cache(Train trainInst, string trainId, string bookingRef)
         {
             var trainEntity = new TrainEntity { TrainId = trainId };
             foreach (var seat in trainInst.Seats)
@@ -180,6 +185,5 @@ namespace TrainTrain
             }
             Factory.Create().Save(trainEntity);
         }
-
     }
 }

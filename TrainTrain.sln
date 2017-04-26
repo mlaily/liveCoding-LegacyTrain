@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DoNotTouch-ExternalDependen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainTrain.Api", "TrainTrain.Api\TrainTrain.Api.csproj", "{68C05460-30E0-4FB4-A8BF-3CFA9412181B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainTrain.Dal.Test", "..\TrainTrain.Dal.Test\TrainTrain.Dal.Test.csproj", "{FB05DD56-585A-49BE-9E1F-D4771406E92B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainTrain.Dal.Test", "TrainTrain.Dal.Test\TrainTrain.Dal.Test.csproj", "{FB05DD56-585A-49BE-9E1F-D4771406E92B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
