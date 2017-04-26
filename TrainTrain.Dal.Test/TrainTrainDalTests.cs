@@ -7,6 +7,12 @@ namespace TrainTrain.Dal.Test
 {
     public class TrainTrainDalTests
     {
+        [SetUp]
+        public void SetUp()
+        {
+            Factory.Create().RemoveAll();
+        }
+
         [TearDown]
         public void TearDown()
         {

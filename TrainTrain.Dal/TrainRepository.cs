@@ -75,6 +75,7 @@ namespace TrainTrain.Dal
         {
             using (var db = new TrainTrainContext())
             {
+               
                 var trains = db.Trains.Include(t => t.Seats).ToList();
                 if (trains.Any())
                 {

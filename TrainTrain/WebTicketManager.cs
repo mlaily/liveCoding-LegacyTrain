@@ -15,6 +15,10 @@ namespace TrainTrain
         private const string uriBookingReferenceService = "http://localhost:51691/";
         private const string urITrainDataService = "http://localhost:50680";
 
+        public WebTicketManager()
+        {
+            ClearCache();
+        }
         public async Task<string> Reserve(string train, int seats)
         {
             var result = string.Empty;
@@ -174,6 +178,11 @@ namespace TrainTrain
         private static async Task SaveCache(string train, Train trainInst, string bookingRef)
         {
             await Task.Run(() => Cache(trainInst, train, bookingRef));
+        }
+
+        private static void ClearCache()
+        {
+            Factory.Create().RemoveAll();
         }
 
         private static void Cache(Train trainInst, string trainId, string bookingRef)
