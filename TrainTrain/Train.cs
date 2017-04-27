@@ -31,7 +31,10 @@ namespace TrainTrain
             }
         }
 
-        public int MaxSeat => this.Seats.Count;
+        public int GetMaxSeat()
+        {
+            return this.Seats.Count;
+        }
 
         public int ReservedSeats { get; set; }
         public List<Seat> Seats { get; set; }

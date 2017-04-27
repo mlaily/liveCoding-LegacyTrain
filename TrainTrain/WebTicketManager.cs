@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -17,36 +16,51 @@ namespace TrainTrain
 
         public WebTicketManager()
         {
-            ClearCache();
+            TrainCaching.Clear();
         }
         public async Task<string> Reserve(string train, int seats)
         {
+            List<Seat> availableSeats = new List<Seat>();
+            int count = 0;
             var result = string.Empty;
             string bookingRef;
 
-            // get the train topology
-            var JsonTrainTopology = await GetTrain(train);
+            // get the train
+            var JsonTrain = await GetTrain(train);
 
-            result = JsonTrainTopology;
+            result = JsonTrain;
 
-            var trainInst = new Train(JsonTrainTopology);
-            
-            if ((trainInst.MaxSeat - trainInst.ReservedSeats) > Math.Floor(ThreasholdManager.GetMaxRes() * trainInst.MaxSeat))
+            var trainInst = new Train(JsonTrain);
+
+            if ((trainInst.GetMaxSeat() - trainInst.ReservedSeats) > Math.Floor(ThreasholdManager.GetMaxRes() * trainInst.GetMaxSeat()))
             {
                 var numberOfReserv = 0;
                 // find seats to reserve
-                var availableSeats = trainInst.Seats.Where(s => s.BookingRef == string.Empty).Take(seats);
+                for (int index = 0, i = 0; index < trainInst.Seats.Count; index++)
+                {
+                    var each = trainInst.Seats[index];
+                    if (each.BookingRef == "")
+                    {
+                        i++;
+                        if (i <= seats)
+                        {
+                            availableSeats.Add(each);
+                        }
+                    }
+                }
 
-                int count = 0;
-                foreach (var seat in availableSeats)
+                foreach (var a in availableSeats)
+                {
                     count++;
+                }
 
                 var reservedSets = 0;
 
 
                 if (count != seats)
                 {
-                    return $"{{\"train_id\": \"{train}\", \"booking_reference\": \"\", \"seats\": []}}";
+                    return string.Format("{{\"train_id\": \"{0}\", \"booking_reference\": \"\", \"seats\": []}}",
+                        train);
                 }
                 else
                 {
@@ -68,9 +82,10 @@ namespace TrainTrain
                 {
                     using (var client = new HttpClient())
                     {
+                        var value = new MediaTypeWithQualityHeaderValue("application/json");
                         client.BaseAddress = new Uri(urITrainDataService);
                         client.DefaultRequestHeaders.Accept.Clear();
-                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                        client.DefaultRequestHeaders.Accept.Add(value);
 
                         if (reservedSets == 0)
                         {
@@ -78,24 +93,28 @@ namespace TrainTrain
                         }
 
                         // HTTP POST
-                        HttpContent resJSON = new StringContent(BuildPostContent(train, bookingRef, availableSeats), Encoding.UTF8, "application/json");
-                        var response = await client.PostAsync($"reserve", resJSON);
+                        HttpContent resJSON = new StringContent(buildPostContent(train, bookingRef, availableSeats), Encoding.UTF8, "application/json");
+                        var response = await client.PostAsync("reserve", resJSON);
 
                         response.EnsureSuccessStatusCode();
 
                         var todod = "[TODOD]";
 
-                        await SaveCache(train, trainInst, bookingRef);
+                        await TrainCaching.Save(train, trainInst, bookingRef);
 
-                        return $"{{\"train_id\": \"{train}\", \"booking_reference\": \"{bookingRef}\", \"seats\": {DumpSeats(availableSeats)}}}";
+                        return string.Format(
+                            "{{\"train_id\": \"{0}\", \"booking_reference\": \"{1}\", \"seats\": {2}}}", 
+                            train,
+                            bookingRef, 
+                            dumpSeats(availableSeats));
                     }
                 }
             }
 
-            return $"{{\"train_id\": \"{train}\", \"booking_reference\": \"\", \"seats\": []}}";
+            return string.Format("{{\"train_id\": \"{0}\", \"booking_reference\": \"\", \"seats\": []}}", train);
         }
 
-        private string DumpSeats(IEnumerable<Seat> seats)
+        private string dumpSeats(IEnumerable<Seat> seats)
         {
             var sb = new StringBuilder("[");
 
@@ -111,7 +130,7 @@ namespace TrainTrain
                     firstTime = false;
                 }
 
-                sb.Append($"\"{seat.SeatNumber}{seat.CoachName}\"");
+                sb.Append(string.Format("\"{0}{1}\"", seat.SeatNumber, seat.CoachName));
             }
 
             sb.Append("]");
@@ -119,12 +138,12 @@ namespace TrainTrain
             return sb.ToString();
         }
 
-        private static string BuildPostContent(string trainId, string bookingRef, IEnumerable<Seat> availableSeats)
+        private static string buildPostContent(string trainId, string bookingRef, IEnumerable<Seat> availableSeats)
         {
             var seats = new StringBuilder("[");
             bool firstTime = true;
 
-            foreach (var availableSeat in availableSeats)
+            foreach (var s in availableSeats)
             {
                 if (!firstTime)
                 {
@@ -135,11 +154,13 @@ namespace TrainTrain
                     firstTime = false;
                 }
 
-                seats.Append($"\"{availableSeat.SeatNumber}{availableSeat.CoachName}\"");
+                seats.Append(string.Format("\"{0}{1}\"", s.SeatNumber, s.CoachName));
             }
             seats.Append("]");
 
-            var result = $"{{\r\n\t\"train_id\": \"{trainId}\",\r\n\t\"seats\": {seats.ToString()},\r\n\t\"booking_reference\": \"{bookingRef}\"\r\n}}";
+            var result = string.Format(
+                "{{\r\n\t\"train_id\": \"{0}\",\r\n\t\"seats\": {1},\r\n\t\"booking_reference\": \"{2}\"\r\n}}",
+                trainId, seats.ToString(), bookingRef);
 
             return result;
         }
@@ -149,12 +170,13 @@ namespace TrainTrain
             string JsonTrainTopology;
             using (var client = new HttpClient())
             {
+                var value = new MediaTypeWithQualityHeaderValue("application/json");
                 client.BaseAddress = new Uri(urITrainDataService);
                 client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Accept.Add(value);
 
                 // HTTP GET
-                var response = await client.GetAsync($"api/data_for_train/{train}");
+                var response = await client.GetAsync(string.Format("api/data_for_train/{0}", train));
                 response.EnsureSuccessStatusCode();
                 JsonTrainTopology = await response.Content.ReadAsStringAsync();
             }
@@ -163,36 +185,17 @@ namespace TrainTrain
 
         protected async Task<string> GetBookRef(HttpClient client)
         {
+            var value = new MediaTypeWithQualityHeaderValue("application/json");
             client.BaseAddress = new Uri(uriBookingReferenceService);
             client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Accept.Add(value);
 
             // HTTP GET
-            var response = await client.GetAsync($"/booking_reference");
+            var response = await client.GetAsync("/booking_reference");
             response.EnsureSuccessStatusCode();
 
             var bookingRef = await response.Content.ReadAsStringAsync();
             return bookingRef;
-        }
-
-        private static async Task SaveCache(string train, Train trainInst, string bookingRef)
-        {
-            await Task.Run(() => Cache(trainInst, train, bookingRef));
-        }
-
-        private static void ClearCache()
-        {
-            Factory.Create().RemoveAll();
-        }
-
-        private static void Cache(Train trainInst, string trainId, string bookingRef)
-        {
-            var trainEntity = new TrainEntity { TrainId = trainId };
-            foreach (var seat in trainInst.Seats)
-            {
-                trainEntity.Seats.Add(new SeatEntity { TrainId = trainId, BookingRef = bookingRef, CoachName = seat.CoachName, SeatNumber = seat.SeatNumber });
-            }
-            Factory.Create().Save(trainEntity);
         }
     }
 }
