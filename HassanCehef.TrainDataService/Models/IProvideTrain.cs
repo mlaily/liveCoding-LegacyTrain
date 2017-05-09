@@ -1,4 +1,4 @@
-﻿namespace AcmeCorp.TrainDataService.Models
+﻿namespace HassanCehef.TrainDataService.Models
 {
     public interface IProvideTrain
     {

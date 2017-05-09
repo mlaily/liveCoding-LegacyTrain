@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using AcmeCorp.TrainDataService.Models;
+using HassanCehef.TrainDataService.Models;
 
-namespace AcmeCorp.TrainDataService.Controllers
+namespace HassanCehef.TrainDataService.Controllers
 {
     [Route("api/data_for_train")]
     public class TrainController : Controller

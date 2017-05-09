@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace AcmeCorp.TrainDataService.Models
+namespace HassanCehef.TrainDataService.Models
 {
     public class  Seat
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AcmeCorp.TrainDataService.Models
+namespace HassanCehef.TrainDataService.Models
 {
     public class TrainRepository : IProvideTrain
     {

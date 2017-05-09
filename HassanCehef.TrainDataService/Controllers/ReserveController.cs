@@ -1,7 +1,7 @@
-using AcmeCorp.TrainDataService.Models;
+using HassanCehef.TrainDataService.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AcmeCorp.TrainDataService.Controllers
+namespace HassanCehef.TrainDataService.Controllers
 {
     [Route("reserve")]
     public class ReserveController : Controller
