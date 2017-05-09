@@ -31,8 +31,7 @@ namespace TrainTrain
             result = JsonTrain;
 
             var trainInst = new Train(JsonTrain);
-
-            if ((trainInst.GetMaxSeat() - trainInst.ReservedSeats) > Math.Floor(ThreasholdManager.GetMaxRes() * trainInst.GetMaxSeat()))
+            if ((trainInst.ReservedSeats + seats) <= Math.Floor(ThreasholdManager.GetMaxRes() * trainInst.GetMaxSeat()))
             {
                 var numberOfReserv = 0;
                 // find seats to reserve
