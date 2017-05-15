@@ -13,10 +13,11 @@ namespace TrainTrain
     {
         private const string uriBookingReferenceService = "http://localhost:51691/";
         private const string urITrainDataService = "http://localhost:50680";
-
+        private ITrainCaching _trainCaching;
         public WebTicketManager()
         {
-            TrainCaching.Clear();
+            _trainCaching = new TrainCaching();
+            _trainCaching.Clear();
         }
         public async Task<string> Reserve(string train, int seats)
         {
@@ -79,6 +80,8 @@ namespace TrainTrain
 
                 if (numberOfReserv == seats)
                 {
+                    await _trainCaching.Save(train, trainInst, bookingRef);
+
                     using (var client = new HttpClient())
                     {
                         var value = new MediaTypeWithQualityHeaderValue("application/json");
@@ -99,7 +102,6 @@ namespace TrainTrain
 
                         var todod = "[TODOD]";
 
-                        await TrainCaching.Save(train, trainInst, bookingRef);
 
                         return string.Format(
                             "{{\"train_id\": \"{0}\", \"booking_reference\": \"{1}\", \"seats\": {2}}}", 

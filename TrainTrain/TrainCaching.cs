@@ -5,19 +5,25 @@ using TrainTrain.Dal.Entities;
 
 namespace TrainTrain
 {
-    public class TrainCaching
+    public interface ITrainCaching
     {
-        public static async Task Save(string train, Train trainInst, string bookingRef)
+        Task Save(string train, Train trainInst, string bookingRef);
+        void Clear();
+    }
+
+    public class TrainCaching : ITrainCaching
+    {
+        public async Task Save(string train, Train trainInst, string bookingRef)
         {
-            await Task.Run((Action) (() => cache(trainInst, train, bookingRef)));
+            await Task.Run((Action) (() => Cache(trainInst, train, bookingRef)));
         }
 
-        public static void Clear()
+        public void Clear()
         {
             Factory.Create().RemoveAll();
         }
 
-        private static void cache(Train trainInst, string trainId, string bookingRef)
+        private static void Cache(Train trainInst, string trainId, string bookingRef)
         {
             var trainEntity = new TrainEntity { TrainId = trainId };
             foreach (var seat in trainInst.Seats)
