@@ -7,11 +7,15 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using TrainTrain.Infra;
 
 namespace TrainTrain.Api
 {
     public class Startup
     {
+        private const string UriBookingReferenceService = "http://localhost:51691/";
+        private const string UriTrainDataService = "http://localhost:50680";
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -29,6 +33,12 @@ namespace TrainTrain.Api
         {
             // Add framework services.
             services.AddMvc();
+
+            var hexagon = new Hexagon(new TrainDataService(UriTrainDataService), new BookingReferenceService(UriBookingReferenceService));
+
+            var reserveSeatsAdapter = new ReserveSeatsRestAdapter(hexagon);
+
+            services.AddSingleton<ReserveSeatsRestAdapter>(reserveSeatsAdapter);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

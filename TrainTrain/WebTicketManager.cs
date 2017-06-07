@@ -4,14 +4,14 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using TrainTrain.Domain;
 
 namespace TrainTrain
 {
-    public class WebTicketManager
+    public class WebTicketManager : IReserveSeats
     {
         private const string UriBookingReferenceService = "http://localhost:51691/";
         private const string UriTrainDataService = "http://localhost:50680";
-        private readonly ITrainCaching _trainCaching;
         private readonly ITrainDataService _trainDataService;
         private readonly IBookingReferenceService _bookingReferenceService;
 
@@ -25,95 +25,37 @@ namespace TrainTrain
 
             _trainDataService = trainDataService;
             _bookingReferenceService = bookingReferenceService;
-            _trainCaching = new TrainCaching();
-            _trainCaching.Clear();
-    
         }
-        public async Task<string> Reserve(string trainId, int seatsRequestedCount)
-        {
-            List<Seat> availableSeats = new List<Seat>();
-            int count = 0;
 
+        public async Task<ReservationAttempt> Reserve(string trainId, int seatsRequestedCount)
+        {
             // get the train
             var jsonTrain = await _trainDataService.GetTrain(trainId);
 
-            var trainInst = new Train(jsonTrain);
-            if (trainInst.ReservedSeats + seatsRequestedCount <= Math.Floor(ThreasholdManager.GetMaxRes() * trainInst.GetMaxSeat()))
+            var train = new Train(jsonTrain, trainId);
+            if (train.DoesNotExceedOverallTrainCapacityLimit(seatsRequestedCount))
             {
-                var numberOfReserv = 0;
-                // find seats to reserve
-                for (int index = 0, i = 0; index < trainInst.Seats.Count; index++)
+                var reservationAttempt = train.BuildReservationAttempt(seatsRequestedCount);
+
+                if (reservationAttempt.IsFullfiled)
                 {
-                    var each = trainInst.Seats[index];
-                    if (each.BookingRef == "")
-                    {
-                        i++;
-                        if (i <= seatsRequestedCount)
-                        {
-                            availableSeats.Add(each);
-                        }
-                    }
-                }
+                    var bookingRef = await _bookingReferenceService.GetBookingReference();
 
-                foreach (var unused in availableSeats)
-                {
-                    count++;
-                }
+                    reservationAttempt.AssignBookingReference(bookingRef);
 
-                var reservedSets = 0;
+                    await _trainDataService.ReserveSeats(trainId, bookingRef, reservationAttempt.AvailableSeats);
 
-                string bookingRef;
-                if (count != seatsRequestedCount)
-                {
-                    return $"{{\"train_id\": \"{trainId}\", \"booking_reference\": \"\", \"seats\": []}}";
-                }
-                else
-                {
-                    bookingRef = await _bookingReferenceService.GetBookingReference();
+                    return reservationAttempt;
 
-                    foreach (var availableSeat in availableSeats)
-                    {
-                        availableSeat.BookingRef = bookingRef;
-                        numberOfReserv++;
-                        reservedSets++;
-                    }
-                }
-
-                if (numberOfReserv == seatsRequestedCount)
-                {
-                    await _trainCaching.Save(trainId, trainInst, bookingRef);
-
-                    await _trainDataService.ReserveSeats(trainId, bookingRef, availableSeats);
-                    return
-                            $"{{\"train_id\": \"{trainId}\", \"booking_reference\": \"{bookingRef}\", \"seats\": {dumpSeats(availableSeats)}}}";
-                    
                 }
             }
-            return $"{{\"train_id\": \"{trainId}\", \"booking_reference\": \"\", \"seats\": []}}";
+
+            return new ReservationAttempt(seatsRequestedCount, trainId);
         }
 
-        private string dumpSeats(IEnumerable<Seat> seats)
+        public bool IsFullfiled(int seatsRequestedCount, List<Seat> availableSeats)
         {
-            var sb = new StringBuilder("[");
-
-            var firstTime = true;
-            foreach (var seat in seats)
-            {
-                if (!firstTime)
-                {
-                    sb.Append(", ");
-                }
-                else
-                {
-                    firstTime = false;
-                }
-
-                sb.Append(string.Format("\"{0}{1}\"", seat.SeatNumber, seat.CoachName));
-            }
-
-            sb.Append("]");
-
-            return sb.ToString();
+            return availableSeats.Count == seatsRequestedCount;
         }
     }
 }

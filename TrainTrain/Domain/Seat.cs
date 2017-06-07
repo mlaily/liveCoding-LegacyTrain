@@ -1,6 +1,9 @@
-﻿namespace TrainTrain
+﻿using System.Collections.Generic;
+using Value;
+
+namespace TrainTrain
 {
-    public class Seat
+    public class Seat : ValueType<Seat>
     {
         public string CoachName { get; }
         public int SeatNumber { get; }
@@ -15,6 +18,13 @@
             this.CoachName = coachName;
             this.SeatNumber = seatNumber;
             this.BookingRef = bookingRef;
+        }
+
+        public bool IsAvailable => this.BookingRef == "";
+
+        protected override IEnumerable<object> GetAllAttributesToBeUsedForEquality()
+        {
+            return new List<object>() { this.CoachName, this.SeatNumber, this.BookingRef };
         }
     }
 }
