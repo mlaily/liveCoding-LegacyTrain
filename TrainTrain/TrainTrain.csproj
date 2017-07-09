@@ -61,7 +61,7 @@
     <Compile Include="Domain\Train.cs" />
     <Compile Include="Infra\TrainDataService.cs" />
     <Compile Include="Infra\TrainJsonPoco.cs" />
-    <Compile Include="WebTicketManager.cs" />
+    <Compile Include="TrainReservationService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TrainTrain.Dal\TrainTrain.Dal.csproj">

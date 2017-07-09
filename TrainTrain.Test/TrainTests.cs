@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NFluent;
+﻿using NFluent;
 using NUnit.Framework;
 using TrainTrain.Test.Acceptance;
 
 namespace TrainTrain.Test
 {
-    class TrainTests
+    internal class TrainTests
     {
         [Test]
         public void Should_expose_Coaches()

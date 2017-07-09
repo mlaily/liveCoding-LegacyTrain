@@ -3,18 +3,18 @@ using TrainTrain.Domain;
 
 namespace TrainTrain
 {
-    public class WebTicketManager : IReserveSeats
+    public class TrainReservationService : IReserveSeats
     {
         private const string UriBookingReferenceService = "http://localhost:51691/";
         private const string UriTrainDataService = "http://localhost:50680";
         private readonly ITrainDataService _trainDataService;
         private readonly IBookingReferenceService _bookingReferenceService;
 
-        public WebTicketManager() : this(new TrainDataService(UriTrainDataService), new BookingReferenceService(UriBookingReferenceService))
+        public TrainReservationService() : this(new TrainDataService(UriTrainDataService), new BookingReferenceService(UriBookingReferenceService))
         {
         }
 
-        public WebTicketManager(ITrainDataService trainDataService, IBookingReferenceService bookingReferenceService)
+        public TrainReservationService(ITrainDataService trainDataService, IBookingReferenceService bookingReferenceService)
         {
             _trainDataService = trainDataService;
             _bookingReferenceService = bookingReferenceService;

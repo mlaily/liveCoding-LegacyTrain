@@ -9,7 +9,7 @@ namespace TrainTrain
 
         public Hexagon(ITrainDataService trainDataService, IBookingReferenceService bookingReferenceService)
         {
-            this.webTicketManager = new WebTicketManager(trainDataService, bookingReferenceService);
+            this.webTicketManager = new TrainReservationService(trainDataService, bookingReferenceService);
         }
 
         public Task<ReservationAttempt> Reserve(string trainId, int seatsRequestedCount)
