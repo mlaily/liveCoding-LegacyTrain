@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using TrainTrain.Domain;
 
 namespace TrainTrain
@@ -15,14 +10,12 @@ namespace TrainTrain
         private readonly ITrainDataService _trainDataService;
         private readonly IBookingReferenceService _bookingReferenceService;
 
-        public WebTicketManager():this(new TrainDataService(UriTrainDataService), new BookingReferenceService(UriBookingReferenceService))
+        public WebTicketManager() : this(new TrainDataService(UriTrainDataService), new BookingReferenceService(UriBookingReferenceService))
         {
-
         }
 
         public WebTicketManager(ITrainDataService trainDataService, IBookingReferenceService bookingReferenceService)
         {
-
             _trainDataService = trainDataService;
             _bookingReferenceService = bookingReferenceService;
         }
@@ -36,7 +29,7 @@ namespace TrainTrain
             if (train.DoesNotExceedOverallTrainCapacityLimit(seatsRequestedCount))
             {
                 var reservationAttempt = train.BuildReservationAttempt(seatsRequestedCount);
-
+                
                 if (reservationAttempt.IsFullfiled)
                 {
                     var bookingRef = await _bookingReferenceService.GetBookingReference();
@@ -46,16 +39,10 @@ namespace TrainTrain
                     await _trainDataService.ReserveSeats(trainId, bookingRef, reservationAttempt.AvailableSeats);
 
                     return reservationAttempt;
-
                 }
             }
 
             return new ReservationAttempt(seatsRequestedCount, trainId);
-        }
-
-        public bool IsFullfiled(int seatsRequestedCount, List<Seat> availableSeats)
-        {
-            return availableSeats.Count == seatsRequestedCount;
         }
     }
 }

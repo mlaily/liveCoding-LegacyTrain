@@ -25,10 +25,10 @@ namespace TrainTrain.Infra
             var reservationAttempt = await this.hexagon.Reserve(trainId, seatsRequestedCount);
 
             // Map from domain to infra
-            return JsonSeralize(reservationAttempt);
+            return JsonSerialize(reservationAttempt);
         }
 
-        private static string JsonSeralize(ReservationAttempt reservationAttempt)
+        private static string JsonSerialize(ReservationAttempt reservationAttempt)
         {
             return $"{{\"train_id\": \"{reservationAttempt.TrainId}\", \"booking_reference\": \"{reservationAttempt.BookingReference}\", \"seats\": {dumpSeats(reservationAttempt.AvailableSeats)}}}";
         }

@@ -34,10 +34,17 @@ namespace TrainTrain.Api
             // Add framework services.
             services.AddMvc();
 
-            var hexagon = new Hexagon(new TrainDataService(UriTrainDataService), new BookingReferenceService(UriBookingReferenceService));
+            // 1. Instantiate adapters to go out
+            var trainDataService = new TrainDataService(UriTrainDataService);
+            var bookingReferenceService = new BookingReferenceService(UriBookingReferenceService);
 
+            // 2. instantiate hexagon
+            var hexagon = new Hexagon(trainDataService, bookingReferenceService);
+
+            // 3. Instantiate the "I need to enter/ask" adapter
             var reserveSeatsAdapter = new ReserveSeatsRestAdapter(hexagon);
 
+            // All your application keeps is a reference to the "I need to enter/ask" adapters
             services.AddSingleton<ReserveSeatsRestAdapter>(reserveSeatsAdapter);
         }
 
