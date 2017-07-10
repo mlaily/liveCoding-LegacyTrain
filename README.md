@@ -2,14 +2,14 @@
 
 __Kata for code retreat__ on how to refactor a typical legacy code-base from an anemic, procedural & bugged domain to a __DDD-style code powered by Hexagonal Architecture__.
 
-*__Note:__ this brown-field kata has been directly inspired by Emily BACHE's __[KataTrainReservation](https://github.com/emilybache/KataTrainReservation) (green-field kata).__
+*__Note:__ this brown-field kata has been directly inspired by Emily BACHE's __[KataTrainReservation](https://github.com/emilybache/KataTrainReservation)__ (green-field).*
 
 
 ## Context
 
 __TrainTrain__ is a start-up aiming to help passengers to smoothly reserve seats on national trains via their Web API. TrainTrain system is actually __leveraging on 2 underlying Web Apis provided by the Hassan Cehef national train operator__ (to get trains topologies and to confirm seats reservations once found, and to get official booking references for those reservations).
 
-A few months ago, a v1 of the TrainTrain.Api has been developed and released by an external consultancy but it seems that they are not interested anymore to work for the TrainTrain start-up. This is why TrainTrain has been calling you __to code the new feature they want to add on their existing system__.
+A few months ago, a v1 of the TrainTrain.Api has been developed and released by an external consultancy but it seems that they are not interested anymore to work for the TrainTrain start-up. This is why TrainTrain has been calling __you to code the new feature they want to add on their existing system__.
 
 ### Existing business rules around seats reservations
 
@@ -23,19 +23,23 @@ A few months ago, a v1 of the TrainTrain.Api has been developed and released by 
 1. __Introduce a new business rule:__
  	- *"Ideally, no individual __coach__ should have no more than 70 percent of reserved seats. This could make you and go over 70% for some coaches, just make sure to keep to 70% for the whole train."*
 
-2.  __Understand why they are paying recurrent penalties to the Hassan Cehef national train operator__ 
+2.  __Understand why TrainTrain is paying recurrent penalties to the Hassan Cehef national train operator__ 
 
- 	- Seems to be related to an exagerated number of seats reservation cancellation
+ 	- Seems to be related to an exagerated number of seats reservation cancellation unless it is related to a bug...
 
 ### Nice-to-have
-3. Embrace the *Ubiquitous Language* of the TrainTrain business within your code
-4. Properly split the domain code (i.e. the one with the business-logic) from the technical one (i.e. the cache, the http or Db calls)
-5. Use Value Types as much as possible
+3. Embrace the __*[Ubiquitous Language](https://martinfowler.com/bliki/UbiquitousLanguage.html)*__ of the TrainTrain business within your code
+
+4. Use as much as possible __DDD tactical patterns__ (e.g. *Value Types, Aggregates, Clojure of operations,* ...)
+
+5. Properly split the domain code (i.e. the one with the business-logic) from the technical one (i.e. the cache, the http or Db calls)
+
 6. Get rid of dead code or useless capabilities
-7. __Implement the Ports and Adapters (a.k.a. Hexagonal Architecture) so that the Domain code will remain properly isolated from the technical code.__ 
-	1. Set a clear separation from business code to technical one by introducing (at least) 2 differents projects: TrainTrain.Domain and TrainTrain.Infra
-	2. All JSON stuffs must be migrated to the Infrastructure side.
-	3. Introduce a completely different JSON format for another TrainTrain partner to interact with the TrainTrain.Api. Of course, the existing Web Api should remains for existing consumers.
+
+7. __Implement the Ports and Adapters (a.k.a. Hexagonal Architecture)__ so that the Domain code (i.e. the one with the business-logic) will remain properly isolated from the technical concerns (i.e. the cache, the http or Db calls). 
+	- Set a clear separation between business code & technical one by introducing 2 differents projects: __TrainTrain.Domain__ and __TrainTrain.Infra__
+	- No JSON stuffs must remain on the Domain side.
+	- Introduce a completely different JSON format for another TrainTrain partner to interact with the TrainTrain.Api. Of course, the existing Web Api should remains for existing consumers. You will have to play with Ports and Adapters...
 
 
 ## Platform architecture
