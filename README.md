@@ -53,4 +53,4 @@ To understand how to interact with TrainTrain or Hassan Cehef Web Apis, you can 
 ## Credits
 This kata has been created by __[Bruno BOUCARD](https://twitter.com/brunoboucard/)__, __[Jérémie GRODZISKI](https://twitter.com/jgrodziski/)__ and __[Thomas PIERRAIN](https://twitter.com/tpierrain/)__ for an exceptional __DDD Paris event__ of 4 hours hosted at Microsoft France June 7th 2017. Vidéos (in french) with the keynote and the 3 live-coding sessions are available __[here on youtube](https://www.youtube.com/channel/UCyqzNZFVOwc8paEVn-wtdpg)__.
 
-__Note:__ the domain (including samples, contraints and invariants) has been directly inspired by Emily BACHE green-field: [KataTrainReservation](https://github.com/emilybache/KataTrainReservation).
+__Note:__ the domain (including samples, contraints and invariants) has been directly inspired by Emily BACHE green-field: __[KataTrainReservation](https://github.com/emilybache/KataTrainReservation)__.
