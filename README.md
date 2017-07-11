@@ -32,11 +32,9 @@ A few months ago, a v1 of the TrainTrain.Api has been developed and released by 
 
 4. Use as much as possible __DDD tactical patterns__ (e.g. *Value Types, Aggregates, Clojure of operations,* ...)
 
-5. Properly split the domain code (i.e. the one with the business-logic) from the technical one (i.e. the cache, the http or Db calls)
+5. Get rid of dead code or useless capabilities
 
-6. Get rid of dead code or useless capabilities
-
-7. __Implement the Ports and Adapters (a.k.a. Hexagonal Architecture)__ so that the Domain code (i.e. the one with the business-logic) will remain properly isolated from the technical concerns (i.e. the cache, the http or Db calls). 
+6. __Implement the Ports and Adapters (a.k.a. Hexagonal Architecture)__ so that the Domain code (i.e. the one with the business-logic) will remain properly isolated from the technical concerns (i.e. the cache, the http or Db calls). 
 	- Set a clear separation between business code & technical one by introducing 2 differents projects: __TrainTrain.Domain__ and __TrainTrain.Infra__
 	- No JSON stuffs must remain on the Domain side.
 	- Introduce a completely different JSON format for another TrainTrain partner to interact with the TrainTrain.Api. Of course, the existing Web Api should remains for existing consumers. You will have to play with Ports and Adapters...
