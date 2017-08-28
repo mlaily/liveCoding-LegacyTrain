@@ -5,48 +5,54 @@ using NUnit.Framework;
 
 namespace TrainTrain.Test.Acceptance
 {
-    public class TrainTrainTests
+    public class TrainTrainTestsShould
     {
-        [Test]
-        public void Should_reserve_seats_when_train_is_empty()
-        {
-            const string trainId = "9043-2017-06-07";
-            const string bookingReference = "75bcd15";
+        private const string TrainId = "9043-2017-06-07";
+        private const string BookingReference = "75bcd15";
 
-            var trainDataService = BuildTrainDataService(trainId, TrainTopologyGenerator.GetTrainWith10AvailableSeats());
-            var bookingReferenceService = BuildBookingReferenceService(bookingReference);
+        [Test]
+        public void Reserve_seats_when_train_is_empty()
+        {
+            const int seatsRequestedCount = 3;
+
+            var trainDataService = BuildTrainDataService(TrainId, TrainTopologyGenerator.With_10_available_seats());
+            var bookingReferenceService = BuildBookingReferenceService(BookingReference);
 
             var webTicketManager = new WebTicketManager(trainDataService, bookingReferenceService);
-            var reservation = webTicketManager.Reserve(trainId, 3).Result;
-            Check.That(reservation).IsEqualTo("{\"train_id\": \"9043-2017-06-07\", \"booking_reference\": \"75bcd15\", \"seats\": [\"1A\", \"2A\", \"3A\"]}");
+            var jsonReservation = webTicketManager.Reserve(TrainId, seatsRequestedCount).Result;
+
+            Check.That(jsonReservation)
+                .IsEqualTo($"{{\"train_id\": \"{TrainId}\", \"booking_reference\": \"{BookingReference}\", \"seats\": [\"1A\", \"2A\", \"3A\"]}}");
         }
 
         [Test]
-        public void Should_not_reserve_seats_when_it_exceed_max_capacty_threshold()
+        public void Not_reserve_seats_when_it_exceed_max_capacty_threshold()
         {
-            const string trainId = "9043-2017-06-07";
-            const string bookingReference = "75bcd15";
+            const int seatsRequestedCount = 3;
 
-            var trainDataService = BuildTrainDataService(trainId, TrainTopologyGenerator.GetTrainWith10ASeatsAnd6AlreadyReserved());
-            var bookingReferenceService = BuildBookingReferenceService(bookingReference);
+            var trainDataService = BuildTrainDataService(TrainId, TrainTopologyGenerator.With_10_seats_and_6_already_reserved());
+            var bookingReferenceService = BuildBookingReferenceService(BookingReference);
 
             var webTicketManager = new WebTicketManager(trainDataService, bookingReferenceService);
-            var reservation = webTicketManager.Reserve(trainId, 3).Result;
-            Check.That(reservation).IsEqualTo("{\"train_id\": \"9043-2017-06-07\", \"booking_reference\": \"\", \"seats\": []}");
+            var jsonReservation = webTicketManager.Reserve(TrainId, seatsRequestedCount).Result;
+
+            Check.That(jsonReservation)
+                .IsEqualTo($"{{\"train_id\": \"{TrainId}\", \"booking_reference\": \"\", \"seats\": []}}");
         }
 
         [Test]
-        public void Should_reserve_all_seats_in_the_same_coach()
+        public void Reserve_all_seats_in_the_same_coach()
         {
-            const string trainId = "9043-2017-06-07";
-            const string bookingReference = "75bcd15";
+            const int seatsRequestedCount = 2;
 
-            var trainDataService = BuildTrainDataService(trainId, TrainTopologyGenerator.GetTrainWith2CoachesAnd9SeatsAlreadyReservedInTheFirstCoach());
-            var bookingReferenceService = BuildBookingReferenceService(bookingReference);
+            var trainDataService = BuildTrainDataService(TrainId, TrainTopologyGenerator.With_2_coaches_and_9_seats_already_reserved_in_the_first_coach());
+            var bookingReferenceService = BuildBookingReferenceService(BookingReference);
 
             var webTicketManager = new WebTicketManager(trainDataService, bookingReferenceService);
-            var reservation = webTicketManager.Reserve(trainId, 2).Result;
-            Check.That(reservation).IsEqualTo("{\"train_id\": \"9043-2017-06-07\", \"booking_reference\": \"75bcd15\", \"seats\": [\"1B\", \"2B\"]}");
+            var jsonReservation = webTicketManager.Reserve(TrainId, seatsRequestedCount).Result;
+
+            Check.That(jsonReservation)
+                .IsEqualTo($"{{\"train_id\": \"{TrainId}\", \"booking_reference\": \"{BookingReference}\", \"seats\": [\"1B\", \"2B\"]}}");
         }
 
         private static IBookingReferenceService BuildBookingReferenceService(string bookingReference)

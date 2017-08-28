@@ -2,7 +2,7 @@
 {
     public class TrainTopologyGenerator
     {
-        public static string GetTrainWith10AvailableSeats()
+        public static string With_10_available_seats()
         {
             return "{\"seats\": {" +
                    "\"1A\": {\"booking_reference\": \"\", \"seat_number\": \"1\", \"coach\": \"A\"}, " +
@@ -17,7 +17,7 @@
                    "\"10A\": {\"booking_reference\": \"\", \"seat_number\": \"10\", \"coach\": \"A\"}}}";
         }
 
-        public static string GetTrainWith10ASeatsAnd6AlreadyReserved()
+        public static string With_10_seats_and_6_already_reserved()
         {
             return "{\"seats\": {" +
                    "\"1A\": {\"booking_reference\": \"75bcd16\", \"seat_number\": \"1\", \"coach\": \"A\"}, " +
@@ -33,7 +33,7 @@
                    "}}";
         }
 
-        public static string GetTrainWith2CoachesAnd9SeatsAlreadyReservedInTheFirstCoach()
+        public static string With_2_coaches_and_9_seats_already_reserved_in_the_first_coach()
         {
             return "{\"seats\": {" +
 
