@@ -53,7 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Acceptance\TrainTopologyGenerator.cs" />
-    <Compile Include="Acceptance\TrainTrainTests.cs" />
+    <Compile Include="Acceptance\TrainTrainSystemShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

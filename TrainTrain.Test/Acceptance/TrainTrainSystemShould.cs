@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace TrainTrain.Test.Acceptance
 {
-    public class TrainTrainTestsShould
+    public class TrainTrainSystemShould
     {
         private const string TrainId = "9043-2017-06-07";
         private const string BookingReference = "75bcd15";
