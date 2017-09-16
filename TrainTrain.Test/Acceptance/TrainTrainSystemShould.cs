@@ -7,7 +7,7 @@ namespace TrainTrain.Test.Acceptance
 {
     public class TrainTrainSystemShould
     {
-        private const string TrainId = "9043-2017-06-07";
+        private const string TrainId = "9043-2017-09-22";
         private const string BookingReference = "75bcd15";
 
         [Test]
