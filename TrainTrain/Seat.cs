@@ -5,10 +5,9 @@
         public string CoachName { get; }
         public int SeatNumber { get; }
         public string BookingRef { get; set;  }
+        public bool IsAvailable => this.BookingRef == string.Empty;
+        public bool IsReserved => !IsAvailable;
 
-        public Seat(string coachName, int seatNumber) : this(coachName, seatNumber, string.Empty)
-        {
-        }
 
         public Seat(string coachName, int seatNumber, string bookingRef)
         {

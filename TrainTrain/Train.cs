@@ -7,13 +7,21 @@ namespace TrainTrain
 {
     public class Train
     {
+        public Dictionary<string, Coach> Coaches { get; } = new Dictionary<string, Coach>();
         public int MaxSeat => this.Seats.Count;
         public int ReservedSeats { get { return Seats.Count(s => s.BookingRef != string.Empty); } }
-        public List<Seat> Seats { get; set; }
+        public List<Seat> Seats { get { return Coaches.Values.SelectMany(c => c.Seats).ToList(); }}
 
-        public Train(List<Seat> seats)
+        public Train(IEnumerable<Seat> seats)
         {
-            this.Seats = seats;
+            foreach (var seat in seats)
+            {
+                if (!Coaches.ContainsKey(seat.CoachName))
+                {
+                    Coaches[seat.CoachName] = new Coach(seat.CoachName);
+                }
+                Coaches[seat.CoachName].AddSeat(seat);
+            }
         }
 
         public bool DoesNotExceedTrainCapacityLimit(int seatsRequestedCount)
@@ -41,17 +49,19 @@ namespace TrainTrain
         }
     }
 
-    public class ReservationAttempt
+    public class Coach
     {
-        private readonly int _seatsRequestedCount;
-        public List<Seat> Seats { get; }
+        public List<Seat> Seats { get; } = new List<Seat>();
+        public string CoachName { get; }
 
-        public ReservationAttempt(int seatsRequestedCount, List<Seat> seats)
+        public Coach(string coachName)
         {
-            _seatsRequestedCount = seatsRequestedCount;
-            Seats = seats;
+            CoachName = coachName;
         }
 
-        public bool IsFulfilled => this.Seats.Count == _seatsRequestedCount;
+        public void AddSeat(Seat seat)
+        {
+            Seats.Add(seat);
+        }
     }
 }
