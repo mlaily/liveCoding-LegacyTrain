@@ -83,7 +83,7 @@ namespace TrainTrain
                 {
                     await _trainCaching.Save(trainId, trainInst, bookingRef);
 
-                    await _trainDataService.ReserveSeats(trainId, bookingRef, availableSeats);
+                    await _trainDataService.BookSeats(trainId, bookingRef, availableSeats);
                     return
                             $"{{\"train_id\": \"{trainId}\", \"booking_reference\": \"{bookingRef}\", \"seats\": {dumpSeats(availableSeats)}}}";
                     

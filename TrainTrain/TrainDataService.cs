@@ -10,7 +10,7 @@ namespace TrainTrain
     public interface ITrainDataService
     {
         Task<string> GetTrain(string train);
-        Task ReserveSeats(string trainId, string bookingRef, List<Seat> availableSeats);
+        Task BookSeats(string trainId, string bookingRef, List<Seat> availableSeats);
     }
 
     public class TrainDataService : ITrainDataService
@@ -39,7 +39,7 @@ namespace TrainTrain
             return jsonTrainTopology;
         }
 
-        public async Task ReserveSeats(string trainId, string bookingRef, List<Seat> availableSeats)
+        public async Task BookSeats(string trainId, string bookingRef, List<Seat> availableSeats)
         {
             using (var client = new HttpClient())
             {
