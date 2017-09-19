@@ -26,12 +26,12 @@ namespace TrainTrain
             _trainDataService = trainDataService;
             _bookingReferenceService = bookingReferenceService;
         }
-        public async Task<string> Reserve(string trainId, int seatsRequestedCount)
+        public async Task<Reservation> Reserve(string trainId, int seatsRequestedCount)
         {
             var train = await _trainDataService.GetTrain(trainId);
             if (train.DoesNotExceedTrainCapacityLimit(seatsRequestedCount))
             {
-                var reservationAttempt = train.BuildReservationAttempt(seatsRequestedCount);
+                var reservationAttempt = train.BuildReservationAttempt(trainId, seatsRequestedCount);
 
                 if (reservationAttempt.IsFulfilled)
                 {
@@ -39,36 +39,14 @@ namespace TrainTrain
 
                     reservationAttempt.AssignBookingReference(bookingRef);
                     
-                    await _trainDataService.BookSeats(trainId, bookingRef, reservationAttempt.Seats);
+                    await _trainDataService.BookSeats(reservationAttempt);
 
-                    return $"{{\"train_id\": \"{trainId}\", \"booking_reference\": \"{bookingRef}\", \"seats\": {dumpSeats(reservationAttempt.Seats)}}}";
+                    Reservation reservation = reservationAttempt.Confirm();
+
+                    return (reservation);
                 }
             }
-            return $"{{\"train_id\": \"{trainId}\", \"booking_reference\": \"\", \"seats\": []}}";
-        }
-
-        private string dumpSeats(IEnumerable<Seat> seats)
-        {
-            var sb = new StringBuilder("[");
-
-            var firstTime = true;
-            foreach (var seat in seats)
-            {
-                if (!firstTime)
-                {
-                    sb.Append(", ");
-                }
-                else
-                {
-                    firstTime = false;
-                }
-
-                sb.Append(string.Format("\"{0}{1}\"", seat.SeatNumber, seat.CoachName));
-            }
-
-            sb.Append("]");
-
-            return sb.ToString();
+            return (new ReservationFailed(trainId, seatsRequestedCount));
         }
     }
 }

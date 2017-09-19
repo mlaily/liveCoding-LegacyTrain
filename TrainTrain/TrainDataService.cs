@@ -11,7 +11,7 @@ namespace TrainTrain
     public interface ITrainDataService
     {
         Task<Train> GetTrain(string train);
-        Task BookSeats(string trainId, string bookingRef, List<Seat> availableSeats);
+        Task BookSeats(ReservationAttempt reservationAttempt);
     }
 
     public class TrainDataService : ITrainDataService
@@ -40,7 +40,7 @@ namespace TrainTrain
             return new Train(AdaptTraintopology(jsonTrainTopology));
         }
 
-        public async Task BookSeats(string trainId, string bookingRef, List<Seat> availableSeats)
+        public async Task BookSeats(ReservationAttempt reservationAttempt)
         {
             using (var client = new HttpClient())
             {
@@ -49,7 +49,7 @@ namespace TrainTrain
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(value);
                 // HTTP POST
-                HttpContent resJson = new StringContent(buildPostContent(trainId, bookingRef, availableSeats),
+                HttpContent resJson = new StringContent(buildPostContent(reservationAttempt.TrainId, reservationAttempt.BookingRef, reservationAttempt.Seats),
                     Encoding.UTF8, "application/json");
                 var response = await client.PostAsync("reserve", resJson);
 

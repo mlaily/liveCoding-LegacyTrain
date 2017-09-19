@@ -9,7 +9,7 @@ namespace TrainTrain
     {
         public Dictionary<string, Coach> Coaches { get; } = new Dictionary<string, Coach>();
         public int MaxSeat => this.Seats.Count;
-        public int ReservedSeats { get { return Seats.Count(s => s.BookingRef != string.Empty); } }
+        public int ReservedSeats { get { return Seats.Count(s => s.IsReserved); } }
         public List<Seat> Seats { get { return Coaches.Values.SelectMany(c => c.Seats).ToList(); }}
 
         public Train(IEnumerable<Seat> seats)
@@ -29,39 +29,18 @@ namespace TrainTrain
             return this.ReservedSeats + seatsRequestedCount <= Math.Floor(CapacityThreasholds.TrainMaxCapacity * this.MaxSeat);
         }
 
-        public ReservationAttempt BuildReservationAttempt(int seatsRequestedCount)
+        public ReservationAttempt BuildReservationAttempt(string trainId, int seatsRequestedCount)
         {
-            List<Seat> availableSeats = new List<Seat>();
-            // find seats to reserve
-            for (int index = 0, i = 0; index < this.Seats.Count; index++)
+            foreach (var coach in Coaches.Values)
             {
-                var each = this.Seats[index];
-                if (each.BookingRef == "")
+                ReservationAttempt reservationAttempt = coach.BuildReservationAttempt(trainId, seatsRequestedCount);
+
+                if (reservationAttempt.IsFulfilled)
                 {
-                    i++;
-                    if (i <= seatsRequestedCount)
-                    {
-                        availableSeats.Add(each);
-                    }
+                    return reservationAttempt;
                 }
             }
-            return new ReservationAttempt(seatsRequestedCount, availableSeats);
-        }
-    }
-
-    public class Coach
-    {
-        public List<Seat> Seats { get; } = new List<Seat>();
-        public string CoachName { get; }
-
-        public Coach(string coachName)
-        {
-            CoachName = coachName;
-        }
-
-        public void AddSeat(Seat seat)
-        {
-            Seats.Add(seat);
+            return new ReservationFailed(trainId, seatsRequestedCount);
         }
     }
 }

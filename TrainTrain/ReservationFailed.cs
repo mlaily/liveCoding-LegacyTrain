@@ -4,7 +4,7 @@ namespace TrainTrain
 {
     public class ReservationFailed : ReservationAttempt
     {
-        public ReservationFailed(int seatsRequestedCount):base(seatsRequestedCount, new List<Seat>())
+        public ReservationFailed(string trainId, int seatsRequestedCount):base(trainId, seatsRequestedCount, new List<Seat>())
         {
         }
     }

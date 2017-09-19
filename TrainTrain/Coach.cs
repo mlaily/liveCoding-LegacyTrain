@@ -18,11 +18,11 @@ namespace TrainTrain
             Seats.Add(seat);
         }
 
-        public ReservationAttempt BuildReservationAttempt(int seatsRequestedCount)
+        public ReservationAttempt BuildReservationAttempt(string trainId, int seatsRequestedCount)
         {
             var availableSeats = Seats.Where(s => s.IsAvailable).Take(seatsRequestedCount).ToList();
            
-            return new ReservationAttempt(seatsRequestedCount, availableSeats);
+            return new ReservationAttempt(trainId, seatsRequestedCount, availableSeats);
         }
     }
 }

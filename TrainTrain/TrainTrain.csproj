@@ -47,8 +47,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BookingReferenceService.cs" />
+    <Compile Include="Coach.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReservationAdapter.cs" />
     <Compile Include="ReservationAttempt.cs" />
+    <Compile Include="ReservationFailed.cs" />
     <Compile Include="Seat.cs" />
     <Compile Include="SeatJsonPoco.cs" />
     <Compile Include="CapacityThreasholds.cs" />

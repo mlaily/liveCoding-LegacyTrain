@@ -21,7 +21,7 @@ namespace TrainTrain.Test.Acceptance
             var webTicketManager = new WebTicketManager(trainDataService, bookingReferenceService);
             var jsonReservation = webTicketManager.Reserve(TrainId, seatsRequestedCount).Result;
 
-            Check.That(jsonReservation)
+            Check.That(ReservationAdapter.AdaptReservation(jsonReservation))
                 .IsEqualTo($"{{\"train_id\": \"{TrainId}\", \"booking_reference\": \"{BookingReference}\", \"seats\": [\"1A\", \"2A\", \"3A\"]}}");
         }
 
@@ -36,12 +36,11 @@ namespace TrainTrain.Test.Acceptance
             var webTicketManager = new WebTicketManager(trainDataService, bookingReferenceService);
             var jsonReservation = webTicketManager.Reserve(TrainId, seatsRequestedCount).Result;
 
-            Check.That(jsonReservation)
+            Check.That(ReservationAdapter.AdaptReservation(jsonReservation))
                 .IsEqualTo($"{{\"train_id\": \"{TrainId}\", \"booking_reference\": \"\", \"seats\": []}}");
         }
 
         [Test]
-        [Ignore("While refactoring")]
         public void Reserve_all_seats_in_the_same_coach()
         {
             const int seatsRequestedCount = 2;
@@ -52,7 +51,7 @@ namespace TrainTrain.Test.Acceptance
             var webTicketManager = new WebTicketManager(trainDataService, bookingReferenceService);
             var jsonReservation = webTicketManager.Reserve(TrainId, seatsRequestedCount).Result;
 
-            Check.That(jsonReservation)
+            Check.That(ReservationAdapter.AdaptReservation(jsonReservation))
                 .IsEqualTo($"{{\"train_id\": \"{TrainId}\", \"booking_reference\": \"{BookingReference}\", \"seats\": [\"1B\", \"2B\"]}}");
         }
 

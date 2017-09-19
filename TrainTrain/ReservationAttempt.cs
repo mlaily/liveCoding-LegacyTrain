@@ -2,21 +2,39 @@
 
 namespace TrainTrain
 {
-    public class ReservationAttempt
+    public class Reservation
     {
-        private readonly int _seatsRequestedCount;
+        public string BookingRef { get; protected set; }
+        public string TrainId { get; }
         public List<Seat> Seats { get; }
 
-        public ReservationAttempt(int seatsRequestedCount, List<Seat> seats)
+        public Reservation(string trainId, string bookingRef, List<Seat> seats)
         {
-            _seatsRequestedCount = seatsRequestedCount;
+            TrainId = trainId;
             Seats = seats;
+            BookingRef = bookingRef;
+        }
+    }
+
+    public class ReservationAttempt : Reservation
+    {
+        protected readonly int SeatsRequestedCount;
+
+        public ReservationAttempt(string trainId, int seatsRequestedCount, List<Seat> seats):base(trainId, string.Empty, seats)
+        {
+            SeatsRequestedCount = seatsRequestedCount;
         }
 
-        public bool IsFulfilled => this.Seats.Count == _seatsRequestedCount;
+        public Reservation Confirm()
+        {
+            return new Reservation(TrainId, BookingRef, Seats);
+        }
+
+        public bool IsFulfilled => this.Seats.Count == SeatsRequestedCount;
 
         public void AssignBookingReference(string bookingRef)
         {
+            BookingRef = bookingRef;
             foreach (var availableSeat in this.Seats)
             {
                 availableSeat.BookingRef = bookingRef;
