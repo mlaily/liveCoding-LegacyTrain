@@ -1,28 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace TrainTrain
+namespace TrainTrain.Domain
 {
-    public class WebTicketManager
+    // The hexagon
+    public class SeatReservationService : IReserveSeats
     {
-        private const string UriBookingReferenceService = "http://localhost:51691/";
-        private const string UriTrainDataService = "http://localhost:50680";
-        
         private readonly ITrainDataService _trainDataService;
         private readonly IBookingReferenceService _bookingReferenceService;
-
-        public WebTicketManager():this(new TrainDataService(UriTrainDataService), new BookingReferenceService(UriBookingReferenceService))
+        
+        public SeatReservationService(ITrainDataService trainDataService, IBookingReferenceService bookingReferenceService)
         {
-
-        }
-
-        public WebTicketManager(ITrainDataService trainDataService, IBookingReferenceService bookingReferenceService)
-        {
-
             _trainDataService = trainDataService;
             _bookingReferenceService = bookingReferenceService;
         }

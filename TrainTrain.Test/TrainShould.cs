@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using NFluent;
 using NUnit.Framework;
+using TrainTrain.Domain;
+using TrainTrain.Infra;
 using TrainTrain.Test.Acceptance;
 
 namespace TrainTrain.Test

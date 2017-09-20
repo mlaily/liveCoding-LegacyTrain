@@ -5,15 +5,10 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using TrainTrain.Domain;
 
-namespace TrainTrain
+namespace TrainTrain.Infra
 {
-    public interface ITrainDataService
-    {
-        Task<Train> GetTrain(string train);
-        Task BookSeats(ReservationAttempt reservationAttempt);
-    }
-
     public class TrainDataService : ITrainDataService
     {
         private readonly string _uriTrainDataService;
