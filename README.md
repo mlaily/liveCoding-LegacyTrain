@@ -5,8 +5,9 @@ __Kata for code retreat__ on how to refactor a typical legacy code-base from an 
 *__Note:__ this brown-field kata has been directly inspired by Emily BACHE's __[KataTrainReservation](https://github.com/emilybache/KataTrainReservation)__ (green-field).*
 
 # This exploreddd branch contains the result of our live coding session in Denver, September 23th 2017.
-If you want to do the same kata, you can start from the situation in the master branch.
+If you want to do the same kata, you can start from the situation __[in the master branch here](https://github.com/42skillz/liveCoding-LegacyTrain)__.
 
+__[Slides are available here](https://github.com/42skillz/talk-distillCoreDomainFromLegacy/blob/master/DistillCoreDomainFromLegacy.pdf)__
 
 ## Context
 
