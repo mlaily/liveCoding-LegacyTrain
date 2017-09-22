@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
-using TrainTrain.Domain;
 
-namespace TrainTrain
+namespace TrainTrain.Domain
 {
+    // Note: now it has nothing to deal with its Web API, we should 
+    // have rename it to SeatReservationService.
     public class WebTicketManager : IReserveSeats
     {
-        
         private readonly IBookingReferenceService _bookingReferenceService;
 
         private readonly ITrainDataService _trainDataService;

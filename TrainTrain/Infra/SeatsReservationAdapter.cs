@@ -2,9 +2,8 @@
 using System.Text;
 using System.Threading.Tasks;
 using TrainTrain.Domain;
-using TrainTrain.Infra;
 
-namespace TrainTrain
+namespace TrainTrain.Infra
 {
     public class SeatsReservationAdapter
     {
