@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -35,10 +36,8 @@ namespace TrainTrain
             int count = 0;
 
             // get the train
-            var jsonTrain = await _trainDataService.GetTrain(trainId);
-
-            var trainInst = new Train(jsonTrain);
-            if (trainInst.ReservedSeats + seatsRequestedCount <= Math.Floor(ThreasholdManager.GetMaxRes() * trainInst.GetMaxSeat()))
+            var trainInst = await _trainDataService.GetTrain(trainId);
+            if (trainInst.ReservedSeats + seatsRequestedCount <= Math.Floor(ThreasholdManager.GetMaxRes() * trainInst.MaxSeat))
             {
                 var numberOfReserv = 0;
                 // find seats to reserve

@@ -4,12 +4,13 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace TrainTrain
 {
     public interface ITrainDataService
     {
-        Task<string> GetTrain(string train);
+        Task<Train> GetTrain(string train);
         Task BookSeats(string trainId, string bookingRef, List<Seat> availableSeats);
     }
 
@@ -22,7 +23,7 @@ namespace TrainTrain
             _uriTrainDataService = uriTrainDataService;
         }
 
-        public async Task<string> GetTrain(string train)
+        public async Task<Train> GetTrain(string train)
         {
             string jsonTrainTopology;
             using (var client = new HttpClient())
@@ -36,7 +37,7 @@ namespace TrainTrain
                 response.EnsureSuccessStatusCode();
                 jsonTrainTopology = await response.Content.ReadAsStringAsync();
             }
-            return jsonTrainTopology;
+            return new Train(AdaptTrainTopology(jsonTrainTopology));
         }
 
         public async Task BookSeats(string trainId, string bookingRef, List<Seat> availableSeats)
@@ -81,6 +82,28 @@ namespace TrainTrain
                 trainId, seats.ToString(), bookingRef);
 
             return result;
+        }
+
+        public static List<Seat> AdaptTrainTopology(string trainTopol)
+        {
+            var seats = new List<Seat>();
+            //var sample =
+            //"{\"seats\": {\"1A\": {\"booking_reference\": \"\", \"seat_number\": \"1\", \"coach\": \"A\"}, \"2A\": {\"booking_reference\": \"\", \"seat_number\": \"2\", \"coach\": \"A\"}}}";
+
+            // Forced to workaround with dynamic parsing since the received JSON is invalid format ;-(
+            dynamic parsed = JsonConvert.DeserializeObject(trainTopol);
+
+            foreach (var token in ((Newtonsoft.Json.Linq.JContainer) parsed))
+            {
+                var allStuffs = ((Newtonsoft.Json.Linq.JObject) ((Newtonsoft.Json.Linq.JContainer) token).First);
+
+                foreach (var stuff in allStuffs)
+                {
+                    var seat = stuff.Value.ToObject<SeatJsonPoco>();
+                    seats.Add(new Seat(seat.coach, Int32.Parse(seat.seat_number), seat.booking_reference));
+                }
+            }
+            return seats;
         }
     }
 }
