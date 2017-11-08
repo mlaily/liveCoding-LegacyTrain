@@ -40,21 +40,6 @@ namespace TrainTrain.Test.Acceptance
                 .IsEqualTo($"{{\"train_id\": \"{TrainId}\", \"booking_reference\": \"\", \"seats\": []}}");
         }
 
-        [Test]
-        public void Reserve_all_seats_in_the_same_coach()
-        {
-            const int seatsRequestedCount = 2;
-
-            var trainDataService = BuildTrainDataService(TrainId, TrainTopologyGenerator.With_2_coaches_and_9_seats_already_reserved_in_the_first_coach());
-            var bookingReferenceService = BuildBookingReferenceService(BookingReference);
-
-            var webTicketManager = new WebTicketManager(trainDataService, bookingReferenceService);
-            var jsonReservation = webTicketManager.Reserve(TrainId, seatsRequestedCount).Result;
-
-            Check.That(jsonReservation)
-                .IsEqualTo($"{{\"train_id\": \"{TrainId}\", \"booking_reference\": \"{BookingReference}\", \"seats\": [\"1B\", \"2B\"]}}");
-        }
-
         private static IBookingReferenceService BuildBookingReferenceService(string bookingReference)
         {
             var bookingReferenceService = Substitute.For<IBookingReferenceService>();
@@ -69,5 +54,22 @@ namespace TrainTrain.Test.Acceptance
                 .Returns(Task.FromResult(new Train(TrainDataService.AdaptTrainTopology(trainTopology))));
             return trainDataService;
         }
+
+        [Test]
+        [Ignore("While refactoring")]
+        public void Reserve_all_seats_in_the_same_coach()
+        {
+            const int seatsRequestedCount = 2;
+
+            var trainDataService = BuildTrainDataService(TrainId, TrainTopologyGenerator.With_2_coaches_and_9_seats_already_reserved_in_the_first_coach());
+            var bookingReferenceService = BuildBookingReferenceService(BookingReference);
+
+            var webTicketManager = new WebTicketManager(trainDataService, bookingReferenceService);
+            var jsonReservation = webTicketManager.Reserve(TrainId, seatsRequestedCount).Result;
+
+            Check.That(jsonReservation)
+                .IsEqualTo($"{{\"train_id\": \"{TrainId}\", \"booking_reference\": \"{BookingReference}\", \"seats\": [\"1B\", \"2B\"]}}");
+        }
+
     }
 }
