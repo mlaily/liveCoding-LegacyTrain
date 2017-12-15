@@ -1,7 +1,32 @@
-﻿namespace TrainTrain.Test.Acceptance
+﻿using System;
+using System.Text;
+
+namespace TrainTrain.Test.Acceptance
 {
     public class TrainTopologyGenerator
     {
+        public static string Generate(int coachCount, int seatsAvailableCount, string bookingReference = "", int reservedCount = 0, int coachNumberWhereReserved = 0)
+        {
+            int reservedSeats = 1;
+            var json = new StringBuilder();
+            json.AppendLine("{\"seats\": {");
+            for (var coachNumber = 1; coachNumber <= coachCount; coachNumber++)
+            {
+                var coachName = Convert.ToChar('A' + coachNumber-1).ToString();
+                for (var seatNumber = 1; seatNumber <= seatsAvailableCount; seatNumber++)
+                {
+                    if (coachNumber == coachNumberWhereReserved)
+                    {
+                        reservedSeats++;
+                    }
+                    bookingReference = reservedSeats <= reservedCount+1 ? bookingReference : "";
+                    json.AppendLine($"\"{seatNumber}{coachName}\": {{\"booking_reference\": \"{bookingReference}\", \"seat_number\": \"{seatNumber}\", \"coach\": \"{coachName}\"}},");
+                }
+            }
+            json.AppendLine("}}");
+            return json.ToString();
+        }
+       
         public static string With_10_available_seats()
         {
             return "{\"seats\": {" +
