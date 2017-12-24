@@ -10,7 +10,7 @@ namespace TrainTrain
 {
     public interface ITrainDataService
     {
-        Task<Train> GetTrain(string train);
+        Task<string> GetTrain(string train);
         Task BookSeats(string trainId, string bookingRef, List<Seat> availableSeats);
     }
 
@@ -23,7 +23,7 @@ namespace TrainTrain
             _uriTrainDataService = uriTrainDataService;
         }
 
-        public async Task<Train> GetTrain(string train)
+        public async Task<string> GetTrain(string train)
         {
             string jsonTrainTopology;
             using (var client = new HttpClient())
@@ -37,7 +37,7 @@ namespace TrainTrain
                 response.EnsureSuccessStatusCode();
                 jsonTrainTopology = await response.Content.ReadAsStringAsync();
             }
-            return new Train(AdaptTrainTopology(jsonTrainTopology));
+            return jsonTrainTopology;
         }
 
         public async Task BookSeats(string trainId, string bookingRef, List<Seat> availableSeats)

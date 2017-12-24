@@ -34,10 +34,11 @@ namespace TrainTrain
         {
             List<Seat> availableSeats = new List<Seat>();
             int count = 0;
+            var jsonTrain = await _trainDataService.GetTrain(trainId);
 
             // get the train
-            var trainInst = await _trainDataService.GetTrain(trainId);
-            if (trainInst.ReservedSeats + seatsRequestedCount <= Math.Floor(ThreasholdManager.GetMaxRes() * trainInst.MaxSeat))
+            var trainInst = new Train(jsonTrain);
+            if (trainInst.ReservedSeats + seatsRequestedCount <= Math.Floor(ThreasholdManager.GetMaxRes() * trainInst.GetMaxSeat()))
             {
                 var numberOfReserv = 0;
                 // find seats to reserve

@@ -40,23 +40,7 @@ namespace TrainTrain.Test.Acceptance
                 .IsEqualTo($"{{\"train_id\": \"{TrainId}\", \"booking_reference\": \"\", \"seats\": []}}");
         }
 
-        private static IBookingReferenceService BuildBookingReferenceService(string bookingReference)
-        {
-            var bookingReferenceService = Substitute.For<IBookingReferenceService>();
-            bookingReferenceService.GetBookingReference().Returns(Task.FromResult(bookingReference));
-            return bookingReferenceService;
-        }
-
-        private static ITrainDataService BuildTrainDataService(string trainId, string trainTopology)
-        {
-            var trainDataService = Substitute.For<ITrainDataService>();
-            trainDataService.GetTrain(trainId)
-                .Returns(Task.FromResult(new Train(TrainDataService.AdaptTrainTopology(trainTopology))));
-            return trainDataService;
-        }
-
         [Test]
-        [Ignore("While refactoring")]
         public void Reserve_all_seats_in_the_same_coach()
         {
             const int seatsRequestedCount = 2;
@@ -71,5 +55,19 @@ namespace TrainTrain.Test.Acceptance
                 .IsEqualTo($"{{\"train_id\": \"{TrainId}\", \"booking_reference\": \"{BookingReference}\", \"seats\": [\"1B\", \"2B\"]}}");
         }
 
+        private static IBookingReferenceService BuildBookingReferenceService(string bookingReference)
+        {
+            var bookingReferenceService = Substitute.For<IBookingReferenceService>();
+            bookingReferenceService.GetBookingReference().Returns(Task.FromResult(bookingReference));
+            return bookingReferenceService;
+        }
+
+        private static ITrainDataService BuildTrainDataService(string trainId, string trainTopology)
+        {
+            var trainDataService = Substitute.For<ITrainDataService>();
+            trainDataService.GetTrain(trainId)
+                .Returns(Task.FromResult(trainTopology));
+            return trainDataService;
+        }
     }
 }
