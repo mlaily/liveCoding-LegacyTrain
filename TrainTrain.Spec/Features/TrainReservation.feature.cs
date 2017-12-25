@@ -113,24 +113,18 @@ this.FeatureBackground();
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("Each reservation must be booked in the same coach")]
-        [NUnit.Framework.IgnoreAttribute("Ignored scenario")]
-        [NUnit.Framework.CategoryAttribute("while")]
-        [NUnit.Framework.CategoryAttribute("refactoring")]
         public virtual void EachReservationMustBeBookedInTheSameCoach()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Each reservation must be booked in the same coach", new string[] {
-                        "ignore",
-                        "while",
-                        "refactoring"});
-#line 22
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Each reservation must be booked in the same coach", ((string[])(null)));
+#line 21
 this.ScenarioSetup(scenarioInfo);
 #line 8
 this.FeatureBackground();
-#line 23
+#line 22
  testRunner.Given("2 coaches of 10 seats and 9 seats already reserved in the coach 1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 24
+#line 23
  testRunner.When("2 seats are requested", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 25
+#line 24
  testRunner.Then("the reservation 75bcd15 should be assigned these seats \"1B, 2B\" in the same coach" +
                     "", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden

@@ -18,7 +18,6 @@ Scenario: Not reserve seats when it exceeds train max capacity 70%
 	When 3 seats are requested
 	Then the reservation 75bcd15 should be failed
 
-@ignore @while refactoring
 Scenario: Each reservation must be booked in the same coach
 	Given 2 coaches of 10 seats and 9 seats already reserved in the coach 1
 	When 2 seats are requested

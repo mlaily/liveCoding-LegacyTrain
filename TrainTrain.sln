@@ -16,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrainTrain.Api", "TrainTrai
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainTrain.Test", "TrainTrain.Test\TrainTrain.Test.csproj", "{34A5D027-0955-4653-B4E3-E067B7480472}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainTrain.Spec", "..\..\..\Cukenfest\liveCoding-LegacyTrain\TrainTrain.Spec\TrainTrain.Spec.csproj", "{3D8481A2-6F9C-4DC1-920F-252B50286A8D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainTrain.Spec", "TrainTrain.Spec\TrainTrain.Spec.csproj", "{3D8481A2-6F9C-4DC1-920F-252B50286A8D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
