@@ -80,15 +80,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TrainTrain.Test\TrainTrain.Test.csproj">
-      <Project>{34a5d027-0955-4653-b4e3-e067b7480472}</Project>
-      <Name>TrainTrain.Test</Name>
-    </ProjectReference>
     <ProjectReference Include="..\TrainTrain\TrainTrain.csproj">
       <Project>{b7fbbf93-b9f3-4bd8-8b8a-7f7bf52b588a}</Project>
       <Name>TrainTrain</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Support\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

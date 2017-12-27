@@ -52,9 +52,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GenerateParams.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TrainTopologyGenerator.cs" />
+    <Compile Include="TrainTopologyGeneratorShould.cs" />
+    <Compile Include="TrainTopologyStaticGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TrainTrain.Spec\TrainTrain.Spec.csproj">
+      <Project>{3d8481a2-6f9c-4dc1-920f-252b50286a8d}</Project>
+      <Name>TrainTrain.Spec</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TrainTrain\TrainTrain.csproj">
       <Project>{b7fbbf93-b9f3-4bd8-8b8a-7f7bf52b588a}</Project>
       <Name>TrainTrain</Name>
