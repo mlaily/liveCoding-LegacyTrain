@@ -10,7 +10,7 @@ namespace TrainTrain.Test
         {
             var generateParams = new GenerateParams
             {
-                CoachCount = 1,
+                CoachesCount = 1,
                 SeatsCountPerCoach = 10
             };
 
@@ -22,9 +22,9 @@ namespace TrainTrain.Test
         {
             var generateParams = new GenerateParams
             {
-                CoachCount = 1,
+                CoachesCount = 1,
                 SeatsCountPerCoach = 10,
-                SeatsReservedCount = 6,
+                SeatsAlreadyReservedCount = 6,
                 BookingReference = "75bcd16",
                 CoachNumberWhereReserved = 1
             };
@@ -38,9 +38,9 @@ namespace TrainTrain.Test
         {
             var generateParams = new GenerateParams
             {
-                CoachCount = 2,
+                CoachesCount = 2,
                 SeatsCountPerCoach = 10,
-                SeatsReservedCount = 9,
+                SeatsAlreadyReservedCount = 9,
                 BookingReference = "75bcd16",
                 CoachNumberWhereReserved = 1
             };

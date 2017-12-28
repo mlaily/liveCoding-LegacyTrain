@@ -18,7 +18,7 @@ namespace TrainTrain.Spec.StepDefinitions
         }
 
         [Given(@"(.*) coaches of (.*) seats available")]
-        public void GivenTheTrainContainsCoachesOfSeatsAvailables(int coachCount, int seatsCount)
+        public void GivenTheTrainContainsCoachesOfSeatsAvailables(int coachesCount, int seatsCount)
         {
             ScenarioContext.Current.Pending();
         }
@@ -31,7 +31,7 @@ namespace TrainTrain.Spec.StepDefinitions
 
         [Given(@"(.*) coaches of (.*) seats and (.*) already reserved")]
         public void GivenCoachesOfSeatsWithAlreadyReserved(int coachesCount, int availableSeatsCount,
-            int seatsReservedCount)
+            int seatsAlreadyReservedCount)
         {
             ScenarioContext.Current.Pending();
         }

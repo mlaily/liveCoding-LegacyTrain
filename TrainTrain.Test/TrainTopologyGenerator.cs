@@ -9,7 +9,7 @@ namespace TrainTrain.Test
         {
             var jsonTrainTopology = new StringBuilder("{\"seats\": {");
 
-            for (var coachNumber = 1; coachNumber <= generateParams.CoachCount; coachNumber++)
+            for (var coachNumber = 1; coachNumber <= generateParams.CoachesCount; coachNumber++)
             {
                 var coachName = Convert.ToChar('A' + coachNumber - 1).ToString();
 
@@ -18,9 +18,9 @@ namespace TrainTrain.Test
                     generateParams.BookingReference = string.Empty;
                 }
 
-                jsonTrainTopology.Append(GenerateCoach(coachName, generateParams.SeatsCountPerCoach, generateParams.SeatsReservedCount, generateParams.BookingReference));
+                jsonTrainTopology.Append(GenerateCoach(coachName, generateParams.SeatsCountPerCoach, generateParams.SeatsAlreadyReservedCount, generateParams.BookingReference));
 
-                jsonTrainTopology.Append(coachNumber + 1 <= generateParams.CoachCount ? "," : "");
+                jsonTrainTopology.Append(coachNumber + 1 <= generateParams.CoachesCount ? "," : "");
             }
 
             jsonTrainTopology.Append("}}");
