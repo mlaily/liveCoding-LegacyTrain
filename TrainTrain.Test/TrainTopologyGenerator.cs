@@ -8,6 +8,8 @@ namespace TrainTrain.Test
         public static string Generate(GenerateParams generateParams)
         {
             var jsonTrainTopology = new StringBuilder("{\"seats\": {");
+            generateParams.CoachNumberWhereReserved =
+                generateParams.CoachesCount == 1 ? 1 : generateParams.CoachNumberWhereReserved;
 
             for (var coachNumber = 1; coachNumber <= generateParams.CoachesCount; coachNumber++)
             {

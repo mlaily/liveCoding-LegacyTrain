@@ -25,8 +25,7 @@ namespace TrainTrain.Test
                 CoachesCount = 1,
                 SeatsCountPerCoach = 10,
                 SeatsAlreadyReservedCount = 6,
-                BookingReference = "75bcd16",
-                CoachNumberWhereReserved = 1
+                BookingReference = "75bcd16"
             };
 
             Check.That(TrainTopologyGenerator.Generate(generateParams))

@@ -1,8 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using NFluent;
-using NSubstitute;
-using TechTalk.SpecFlow;
+﻿using TechTalk.SpecFlow;
 
 
 namespace TrainTrain.Spec.StepDefinitions
@@ -23,21 +19,20 @@ namespace TrainTrain.Spec.StepDefinitions
             ScenarioContext.Current.Pending();
         }
 
-        [When(@"(.*) seats are requested")]
-        public void WhenSeatsRequested(int seatsRequestedCount)
-        {
-            ScenarioContext.Current.Pending();
-        }
-
         [Given(@"(.*) coaches of (.*) seats and (.*) already reserved")]
-        public void GivenCoachesOfSeatsWithAlreadyReserved(int coachesCount, int availableSeatsCount,
-            int seatsAlreadyReservedCount)
+        public void GivenCoachesOfSeatsWithAlreadyReserved(int coachesCount, int seatsCount, int seatsAlreadyReservedCount)
         {
             ScenarioContext.Current.Pending();
         }
 
         [Given(@"(.*) coaches of (.*) seats and (.*) seats already reserved in the coach (.*)")]
-        public void GivenCoachesOfSeatsWithSeatsAlreadyReservedInTheCoach(int coachesCount, int availableSeatsCount, int seatsReservedCount, int coachNumberWhereReserved)
+        public void GivenCoachesOfSeatsWithSeatsAlreadyReservedInTheCoach(int coachesCount, int seatsCount, int seatsReservedCount, int coachNumberWhereReserved)
+        {
+            ScenarioContext.Current.Pending();
+        }
+
+        [When(@"(.*) seats are requested")]
+        public void WhenSeatsRequested(int seatsRequestedCount)
         {
             ScenarioContext.Current.Pending();
         }
