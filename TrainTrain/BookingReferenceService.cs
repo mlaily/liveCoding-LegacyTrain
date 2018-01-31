@@ -5,11 +5,6 @@ using System.Threading.Tasks;
 
 namespace TrainTrain
 {
-    public interface IBookingReferenceService
-    {
-        Task<string> GetBookingReference();
-    }
-
     public class BookingReferenceService : IBookingReferenceService
     {
         private readonly string _uriBookingReferenceService;

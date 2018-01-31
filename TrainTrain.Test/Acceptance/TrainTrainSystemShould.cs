@@ -19,9 +19,9 @@ namespace TrainTrain.Test.Acceptance
             var bookingReferenceService = BuildBookingReferenceService(BookingReference);
 
             var webTicketManager = new WebTicketManager(trainDataService, bookingReferenceService);
-            var jsonReservation = webTicketManager.Reserve(TrainId, seatsRequestedCount).Result;
+            var reservation = webTicketManager.Reserve(TrainId, seatsRequestedCount).Result;
 
-            Check.That(jsonReservation)
+            Check.That(SeatsReservationAdapter.AdaptReservation(reservation))
                 .IsEqualTo($"{{\"train_id\": \"{TrainId}\", \"booking_reference\": \"{BookingReference}\", \"seats\": [\"1A\", \"2A\", \"3A\"]}}");
         }
 
@@ -34,9 +34,9 @@ namespace TrainTrain.Test.Acceptance
             var bookingReferenceService = BuildBookingReferenceService(BookingReference);
 
             var webTicketManager = new WebTicketManager(trainDataService, bookingReferenceService);
-            var jsonReservation = webTicketManager.Reserve(TrainId, seatsRequestedCount).Result;
+            var reservation = webTicketManager.Reserve(TrainId, seatsRequestedCount).Result;
 
-            Check.That(jsonReservation)
+            Check.That(SeatsReservationAdapter.AdaptReservation(reservation))
                 .IsEqualTo($"{{\"train_id\": \"{TrainId}\", \"booking_reference\": \"\", \"seats\": []}}");
         }
 
@@ -49,9 +49,9 @@ namespace TrainTrain.Test.Acceptance
             var bookingReferenceService = BuildBookingReferenceService(BookingReference);
 
             var webTicketManager = new WebTicketManager(trainDataService, bookingReferenceService);
-            var jsonReservation = webTicketManager.Reserve(TrainId, seatsRequestedCount).Result;
+            var reservation = webTicketManager.Reserve(TrainId, seatsRequestedCount).Result;
 
-            Check.That(jsonReservation)
+            Check.That(SeatsReservationAdapter.AdaptReservation(reservation))
                 .IsEqualTo($"{{\"train_id\": \"{TrainId}\", \"booking_reference\": \"{BookingReference}\", \"seats\": [\"1B\", \"2B\"]}}");
         }
 
@@ -66,7 +66,7 @@ namespace TrainTrain.Test.Acceptance
         {
             var trainDataService = Substitute.For<ITrainDataService>();
             trainDataService.GetTrain(trainId)
-                .Returns(Task.FromResult(trainTopology));
+                .Returns(Task.FromResult(new Train(trainId, TrainDataService.AdaptTrainToplogy(trainTopology))));
             return trainDataService;
         }
     }

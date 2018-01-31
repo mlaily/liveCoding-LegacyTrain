@@ -4,11 +4,9 @@
     {
         public string CoachName { get; }
         public int SeatNumber { get; }
-        public string BookingRef { get; set;  }
+        public string BookingRef { get;  }
+        public bool IsAvailable => string.IsNullOrEmpty(BookingRef);
 
-        public Seat(string coachName, int seatNumber) : this(coachName, seatNumber, string.Empty)
-        {
-        }
 
         public Seat(string coachName, int seatNumber, string bookingRef)
         {

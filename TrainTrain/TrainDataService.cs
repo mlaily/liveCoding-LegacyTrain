@@ -8,12 +8,6 @@ using Newtonsoft.Json;
 
 namespace TrainTrain
 {
-    public interface ITrainDataService
-    {
-        Task<string> GetTrain(string train);
-        Task BookSeats(string trainId, string bookingRef, List<Seat> availableSeats);
-    }
-
     public class TrainDataService : ITrainDataService
     {
         private readonly string _uriTrainDataService;
@@ -23,7 +17,7 @@ namespace TrainTrain
             _uriTrainDataService = uriTrainDataService;
         }
 
-        public async Task<string> GetTrain(string train)
+        public async Task<Train> GetTrain(string trainId)
         {
             string jsonTrainTopology;
             using (var client = new HttpClient())
@@ -33,11 +27,11 @@ namespace TrainTrain
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(value);
                 // HTTP GET
-                var response = await client.GetAsync($"api/data_for_train/{train}");
+                var response = await client.GetAsync($"api/data_for_train/{trainId}");
                 response.EnsureSuccessStatusCode();
                 jsonTrainTopology = await response.Content.ReadAsStringAsync();
             }
-            return jsonTrainTopology;
+            return new Train(trainId, AdaptTrainToplogy(jsonTrainTopology));
         }
 
         public async Task BookSeats(string trainId, string bookingRef, List<Seat> availableSeats)
@@ -49,7 +43,7 @@ namespace TrainTrain
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(value);
                 // HTTP POST
-                HttpContent resJson = new StringContent(buildPostContent(trainId, bookingRef, availableSeats),
+                HttpContent resJson = new StringContent(BuildPostContent(trainId, bookingRef, availableSeats),
                     Encoding.UTF8, "application/json");
                 var response = await client.PostAsync("reserve", resJson);
 
@@ -57,7 +51,7 @@ namespace TrainTrain
             }
         }
 
-        public static string buildPostContent(string trainId, string bookingRef, IEnumerable<Seat> availableSeats)
+        public static string BuildPostContent(string trainId, string bookingRef, IEnumerable<Seat> availableSeats)
         {
             var seats = new StringBuilder("[");
             bool firstTime = true;
@@ -73,15 +67,33 @@ namespace TrainTrain
                     firstTime = false;
                 }
 
-                seats.Append(String.Format("\"{0}{1}\"", s.SeatNumber, s.CoachName));
+                seats.Append($"\"{s.SeatNumber}{s.CoachName}\"");
             }
             seats.Append("]");
 
-            var result = String.Format(
-                "{{\r\n\t\"train_id\": \"{0}\",\r\n\t\"seats\": {1},\r\n\t\"booking_reference\": \"{2}\"\r\n}}",
-                trainId, seats.ToString(), bookingRef);
+            return $"{{\r\n\t\"train_id\": \"{trainId}\",\r\n\t\"seats\": {seats.ToString()},\r\n\t\"booking_reference\": \"{bookingRef}\"\r\n}}";
+        }
 
-            return result;
+        public static List<Seat> AdaptTrainToplogy(string trainTopology)
+        {
+            var seats = new List<Seat>();
+            //var sample =
+            //"{\"seats\": {\"1A\": {\"booking_reference\": \"\", \"seat_number\": \"1\", \"coach\": \"A\"}, \"2A\": {\"booking_reference\": \"\", \"seat_number\": \"2\", \"coach\": \"A\"}}}";
+
+            // Forced to workaround with dynamic parsing since the received JSON is invalid format ;-(
+            dynamic parsed = JsonConvert.DeserializeObject(trainTopology);
+
+            foreach (var token in ((Newtonsoft.Json.Linq.JContainer) parsed))
+            {
+                var allStuffs = ((Newtonsoft.Json.Linq.JObject) ((Newtonsoft.Json.Linq.JContainer) token).First);
+
+                foreach (var stuff in allStuffs)
+                {
+                    var seat = stuff.Value.ToObject<SeatJsonPoco>();
+                    seats.Add(new Seat(seat.coach, Int32.Parse(seat.seat_number), seat.booking_reference));
+                }
+            }
+            return seats;
         }
     }
 }

@@ -1,68 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Linq;
 
 namespace TrainTrain
 {
     public class Train
     {
-        public Train(string trainTopol)
+        public Dictionary<string, Coach> Coaches { get; } = new Dictionary<string, Coach>();
+        public string TrainId { get; }
+        public int MaxSeat => Seats.Count;
+        public int ReservedSeats { get { return Seats.Count(s => !s.IsAvailable); }}
+        public List<Seat> Seats { get; set; }
+
+        public Train(string trainId, List<Seat> seats)
         {
-            this.Seats = new List<Seat>();
-            //var sample =
-            //"{\"seats\": {\"1A\": {\"booking_reference\": \"\", \"seat_number\": \"1\", \"coach\": \"A\"}, \"2A\": {\"booking_reference\": \"\", \"seat_number\": \"2\", \"coach\": \"A\"}}}";
+            TrainId = trainId;
+            Seats = seats;
 
-            // Forced to workaround with dynamic parsing since the received JSON is invalid format ;-(
-            dynamic parsed = JsonConvert.DeserializeObject(trainTopol);
-
-            foreach (var token in ((Newtonsoft.Json.Linq.JContainer)parsed))
+            foreach (var seat in seats)
             {
-                var allStuffs = ((Newtonsoft.Json.Linq.JObject)((Newtonsoft.Json.Linq.JContainer)token).First);
-
-                foreach (var stuff in allStuffs)
+                if (!Coaches.ContainsKey(seat.CoachName))
                 {
-                    var seat = stuff.Value.ToObject<SeatJsonPoco>();
-                    this.Seats.Add(new Seat(seat.coach, int.Parse(seat.seat_number), seat.booking_reference));
-                    if (!string.IsNullOrEmpty(seat.booking_reference))
-                    {
-                        this.ReservedSeats++;
-                    }
+                    Coaches[seat.CoachName] = new Coach(seat.CoachName);
                 }
+                Coaches[seat.CoachName] = Coaches[seat.CoachName].AddSeat(seat);
             }
         }
 
-        public int GetMaxSeat()
+        public bool DoesNotExceedTrainOvervallCapityLimit(int seatsRequestedCount)
         {
-            return this.Seats.Count;
+            return ReservedSeats + seatsRequestedCount <= Math.Floor(ThreasholdTrainCapacity.ReservationRateLimit * MaxSeat);
         }
 
-        public int ReservedSeats { get; set; }
-        public List<Seat> Seats { get; set; }
-
-        public bool HasLessThanThreshold(int i)
+        public ReservationAttempt BuildReservationAttempt(int seatsRequestedCount)
         {
-            return ReservedSeats < i;
+            foreach (var coach in Coaches.Values)
+            {
+                var reservationAttempt = coach.BuildReservationAttempt(TrainId, seatsRequestedCount);
+                if (reservationAttempt.IsFulFilled)
+                {
+                    return reservationAttempt;
+                }
+            }
+            return new ReservationAttemptFailure(TrainId,seatsRequestedCount);
         }
-    }
-
-    public class TrainJsonPoco
-    {
-        public List<SeatJsonPoco> seats { get; set; }
-
-        public TrainJsonPoco()
-        {
-            this.seats = new List<SeatJsonPoco>();
-        }
-    }
-
-    public class SeatJsonPoco
-    {
-        public string booking_reference { get; set; }
-        public string seat_number { get; set; }
-        public string coach { get; set; }
-
-        public SeatJsonPoco()
-        {
-        }
+  
     }
 }
