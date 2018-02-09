@@ -69,7 +69,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>TrainReservation.feature</DependentUpon>
     </Compile>
-    <Compile Include="StepDefinitions\TrainTrainReservationSteps.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -86,6 +85,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="StepDefinitions\" />
     <Folder Include="Support\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
