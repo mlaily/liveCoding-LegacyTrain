@@ -7,11 +7,16 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using TrainTrain.Domain;
+using TrainTrain.Infra;
 
 namespace TrainTrain.Api
 {
     public class Startup
     {
+        private const string UriBookingReferenceService = "http://localhost:51691/";
+        private const string UrlTrainDataService = "http://localhost:50680";
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -27,6 +32,18 @@ namespace TrainTrain.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Step1: Instantiate the "I want to go out" adapters
+            var trainDataServiceAdapter = new TrainDataService(UrlTrainDataService);
+            var bookingReferenceServiceAdapter = new BookingReferenceService(UriBookingReferenceService);
+
+            // Step2: Instantiate the hexagon
+            IReserveSeats hexagon = new SeatsReservation(trainDataServiceAdapter, bookingReferenceServiceAdapter);
+
+            // Step3: Instantiate the "I want to go in" adapter(s)
+            var seatsReservationAdapter = new SeatsReservationAdapter(hexagon);
+
+            services.AddSingleton<SeatsReservationAdapter>(seatsReservationAdapter);
+
             // Add framework services.
             services.AddMvc();
         }

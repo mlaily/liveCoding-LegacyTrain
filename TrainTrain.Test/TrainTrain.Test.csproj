@@ -52,7 +52,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Acceptance\TrainTrainTests.cs" />
+    <Compile Include="Acceptance\TrainShould.cs" />
+    <Compile Include="Acceptance\TrainTopologyBuilder.cs" />
+    <Compile Include="Acceptance\TrainTrainShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

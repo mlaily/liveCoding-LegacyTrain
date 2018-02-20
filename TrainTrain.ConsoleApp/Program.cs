@@ -9,7 +9,7 @@ namespace TrainTrain.ConsoleApp
             var train = args[0];
             var seats = int.Parse(args[1]);
 
-            var manager = new WebTicketManager();
+            var manager = new SeatsReservation();
 
             var jsonResult = manager.Reserve(train, seats);
 
