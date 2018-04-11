@@ -26,7 +26,7 @@ namespace TrainTrain.Test.Acceptance
         }
 
         [Test]
-        public async Task Not_reserve_seats_when_it_exceed_max_capacty_thresholdAsync()
+        public async Task Not_reserve_seats_when_it_exceed_max_capacty_threshold()
         {
             const int seatsRequestedCount = 3;
 
