@@ -6,7 +6,7 @@ namespace TrainTrain.Test.Acceptance
 {
     public class TrainTrainShould
     {
-        private const string TrainId = "9043-2018-04-18";
+        private const string TrainId = "9043-2018-04-26";
         private const string BookingReference = "75bcd15";
 
         [Test]
@@ -37,7 +37,7 @@ namespace TrainTrain.Test.Acceptance
             Check.That(reservation).IsEqualTo($"{{\"train_id\": \"{TrainId}\", \"booking_reference\": \"\", \"seats\": []}}");
         }
 
-        [Test, Ignore("while refactoring")]
+        [Test]
         public void Reserve_all_seats_in_the_same_coach()
         {
             const int seatsRequestedCount = 2;
@@ -61,7 +61,7 @@ namespace TrainTrain.Test.Acceptance
         private static ITrainDataService BuildTrainDataService(string trainTopology)
         {
             var trainDataService = Substitute.For<ITrainDataService>();
-            trainDataService.GetTrain(TrainId).Returns(trainTopology);
+            trainDataService.GetTrain(TrainId).Returns(new Train(TrainDataService.AdaptTrainTopology(trainTopology)));
             return trainDataService;
         }
     }
