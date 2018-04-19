@@ -1,4 +1,4 @@
-﻿namespace TrainTrain
+﻿namespace TrainTrain.Domain
 {
     public class Seat
     {
@@ -15,6 +15,11 @@
             this.CoachName = coachName;
             this.SeatNumber = seatNumber;
             this.BookingRef = bookingRef;
+        }
+
+        public bool IsAvailable()
+        {
+            return this.BookingRef == "";
         }
     }
 }

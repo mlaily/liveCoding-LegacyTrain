@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using TrainTrain.Api.Models;
+using TrainTrain.Infra;
 
 namespace TrainTrain.Api.Controllers
 {
@@ -29,7 +29,7 @@ namespace TrainTrain.Api.Controllers
         public async Task<string> Post([FromBody]ReservationRequestDto reservationRequest)
         {
             var manager = new WebTicketManager();
-            return await manager.Reserve(reservationRequest.train_id, reservationRequest.number_of_seats);
+            return ReservationSeatsAdapter.AdaptReservation(await manager.Reserve(reservationRequest.train_id, reservationRequest.number_of_seats));
         }
 
         // PUT api/values/5
