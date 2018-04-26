@@ -35,7 +35,7 @@ namespace TrainTrain
             return new Train(AdaptTrainTopology(jsonTrainTopology));
         }
 
-        public async Task Reserve(string trainId, string bookingRef, List<Seat> availableSeats)
+        public async Task BookSeats(string trainId, string bookingRef, List<Seat> availableSeats)
         {
             using (var client = new HttpClient())
             {

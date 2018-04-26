@@ -11,16 +11,18 @@ namespace TrainTrain.Test.Acceptance
         private const string BookingReference = "75bcd15";
 
         [Test]
-        public async System.Threading.Tasks.Task Reserve_seats_when_train_is_emptyAsync()
+        public async Task Reserve_seats_when_train_is_empty()
         {
             const int seatsRequestedCount = 3;
-
+            // Given
             var trainDataService = BuildTrainDataService(TrainTopology.With_10_available_seats());
             var bookingReferenceService = BuildBookingReferenceService();
-
             var webTicketManager = new WebTicketManager(trainDataService, bookingReferenceService);
+            
+            // When
             var reservation = await webTicketManager.Reserve(TrainId, seatsRequestedCount);
 
+            // Then
             Check.That(reservation).IsEqualTo($"{{\"train_id\": \"{TrainId}\", \"booking_reference\": \"{BookingReference}\", \"seats\": [\"1A\", \"2A\", \"3A\"]}}");
         }
 
@@ -39,6 +41,7 @@ namespace TrainTrain.Test.Acceptance
         }
 
         [Test]
+        [Ignore("While refactoring")]
         public async Task Reserve_all_seats_in_the_same_coach()
         {
             const int seatsRequestedCount = 2;

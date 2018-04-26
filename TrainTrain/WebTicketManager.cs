@@ -83,7 +83,7 @@ namespace TrainTrain
                 {
                     await _trainCaching.Save(trainId, trainInst, bookingRef);
 
-                    await _trainDataService.Reserve(trainId, bookingRef, availableSeats);
+                    await _trainDataService.BookSeats(trainId, bookingRef, availableSeats);
 
                     var todod = "[TODOD]";
 
